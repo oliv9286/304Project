@@ -166,10 +166,10 @@ insert into Item values
 (00000011, 'Playstation 3', 299.99, 10);
 
 insert into Item values
-(00000012, 'Xbox 360', 199.99, 10);
+(00000012, 'XBOX 360', 199.99, 10);
 
 insert into Item values
-(00000013, 'Wii', 129.99, 8);
+(00000013, 'WII', 129.99, 8);
 
 insert into Item values
 (00000014, 'Sony Headphones', 29.99, 6);
@@ -253,7 +253,7 @@ insert into game values
 (00000003, 'RPG', 0, 'PS3', 'Square-Enix');
 
 insert into game values
-(00000004, 'HORROR', 1, 'Xbox 360', 'Capcom');
+(00000004, 'HORROR', 1, 'XBOX 360', 'Capcom');
 
 insert into game values
 (00000005, 'PLATFORMER', 1, 'PS3', 'Sony');
@@ -262,7 +262,7 @@ insert into game values
 (00000006, 'ACTION', 0, 'PS3', 'Sony');
 
 insert into game values
-(00000007, 'ACTION', 0, 'Xbox 360', 'Ubisoft');
+(00000007, 'ACTION', 0, 'XBOX 360', 'Ubisoft');
 
 insert into game values
 (00000008, 'RPG', 0, 'PC', 'Electronic Arts');
@@ -271,13 +271,13 @@ insert into game values
 (00000009, 'FPS', 1, 'PS3', 'Activision');
 
 insert into game values
-(00000010, 'RACING', 1, 'Wii', 'Nintendo');
+(00000010, 'RACING', 1, 'WII', 'Nintendo');
 
 insert into game values
 (00000016, 'RPG', 1, 'PC', 'Electronic Arts');
 
 insert into game values
-(00000017, 'RPG', 0, 'Xbox 360', 'Electronic Arts');
+(00000017, 'RPG', 0, 'XBOX 360', 'Electronic Arts');
 
 insert into game values
 (00000018, 'RPG', 0, 'PS3','Electronic Arts');
@@ -286,7 +286,7 @@ insert into game values
 (00000021, 'SHOOTER', 0, 'VITA', 'Sony');
 
 insert into game values
-(00000022, 'RPG', 0, 'Xbox 360', 'Electronic Arts');
+(00000022, 'RPG', 0, 'XBOX 360', 'Electronic Arts');
 
 insert into game values
 (00000023, 'FIGHTING', 1, 'PS3', 'Capcom');
@@ -298,7 +298,7 @@ insert into game values
 (00000025, 'RPG', 1, 'PC', 'Electronic Arts');
 
 insert into game values
-(00000026, 'ACTION', 0, 'Vita', 'SCEA');
+(00000026, 'ACTION', 0, 'VITA', 'SCEA');
 
 insert into game values
 (00000027, 'ACTION', 1, 'PS3', 'Capcom');
@@ -310,7 +310,7 @@ insert into game values
 (00000029, 'ACTION', 0, 'PC', 'Warner Bros. Interactive Entertainment');
 
 insert into game values
-(00000030, 'RPG', 1, 'Wii', 'Nintendo');
+(00000030, 'RPG', 1, 'WII', 'Nintendo');
 
 insert into new_game values
 (00000001);
