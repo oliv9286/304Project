@@ -72,9 +72,9 @@ Find the
   <form method="post" action="index.php?platformaggregation" id="platformaggregation">
 Find the platform with the 
 <select name="platformaggregation">
-<option value="Highest">Highest</option>
-<option value="Lowest">Lowest</option>
-</select> average price of games.
+<option value="Most">Most</option>
+<option value="Least">Least</option>
+</select> games.
 <input type="submit" name="platformaggregationsubmit" value="Go!"/>
 </form>
 
@@ -235,61 +235,59 @@ Find the game genre with the
       else if(isset($_POST['platformaggregationsubmit'])) {
 	    if(isset($_GET['platformaggregation'])) {
 			$option=$_POST['platformaggregation'];
-			$sqlcreateview = "create view PlatformAverage (platform, average) as 
-							select g.platform, avg(i.price) as average
-							from game g, item i
-							where g.serial_number = i.serial_number
-							group by g.platform
-							having count(*) >= 1";
+			$sqlcreateview = "create view PlatformCount (platform, gameCount) as 
+							select g.platform, count(*) as gameCount
+							from game g
+							group by g.platform";
 			$viewresult = executePlainSQL($sqlcreateview);			
 
-			$sqlview = "select * from PlatformAverage";
+			$sqlview = "select * from PlatformCount";
 			$viewresult = executePlainSQL($sqlview);
 				
-			echo "<br>Average Price of Each Platform</br>";
+			echo "<br>Number of Games for each platform</br>";
 			echo "<table>";
-			echo "<tr><th>Platform</th><th>Average</th></tr>";
+			echo "<tr><th>Platform</th><th>Game Count</th></tr>";
 
 			while ($row = OCI_Fetch_Array($viewresult, OCI_BOTH)) {
-				echo "<tr><td>" . $row["PLATFORM"] . "</td><td>" . round($row["AVERAGE"], 2) . "</td></tr>"; //or just use "echo $row[0]" 
+				echo "<tr><td>" . $row["PLATFORM"] . "</td><td>" . round($row["GAMECOUNT"], 2) . "</td></tr>"; //or just use "echo $row[0]" 
 			}
 			echo "</table>";	
 			
-			if ( strcmp ( $option , "Highest" ) == 0) {
+			if ( strcmp ( $option , "Most" ) == 0) {
 									
-				$sql = "select platform, average
-						from PlatformAverage
-						where average = (select MAX(average) from PlatformAverage)";
+				$sql = "select platform, gameCount
+						from PlatformCount
+						where gameCount = (select MAX(gameCount) from PlatformCount)";
 		
 				$result = executePlainSQL($sql);
 				
-				echo "<br>Highest Average of Platforms</br>";
+				echo "<br>Platform with Most Games</br>";
 
 
 
 			}
-			else if ( strcmp ( $option , "Lowest" ) == 0 ) {
+			else if ( strcmp ( $option , "Least" ) == 0 ) {
 			
-				$sql = "select platform, average
-						from PlatformAverage
-						where average = (select MIN(average) from PlatformAverage)";
+				$sql = "select platform, gameCount
+						from PlatformCount
+						where gameCount = (select MIN(gameCount) from PlatformCount)";
 		
 				$result = executePlainSQL($sql);
 				
-				echo "<br>Lowest Average of Platforms</br>";
+				echo "<br>Platform with least Games</br>";
 
 
 
 			}
 			echo "<table>";
-			echo "<tr><th>Platform</th><th>Average</th></tr>";
+			echo "<tr><th>Platform</th><th>Game Count</th></tr>";
 
 			while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
-				echo "<tr><td>" . $row["PLATFORM"] . "</td><td>" . round($row["AVERAGE"], 2) . "</td></tr>"; //or just use "echo $row[0]" 
+				echo "<tr><td>" . $row["PLATFORM"] . "</td><td>" . round($row["GAMECOUNT"], 2) . "</td></tr>"; //or just use "echo $row[0]" 
 			}
 			echo "</table>";				
 			
-			$sqldrop = "drop view PlatformAverage";
+			$sqldrop = "drop view PlatformCount";
 			$viewdrop = executePlainSQL($sqldrop);			
 			
 			
