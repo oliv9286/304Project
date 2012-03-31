@@ -36,7 +36,7 @@
 	}
 
 ?>
-<a href="Manager.php">Managers Login</a> <a href="Employee.php">Employees Login</a>  <a href="Customer.php">Customers Login</a>
+<a href="Manager.php">Managers Login</a> <a href="Employee.php">Employees Login</a>  <a href="Customer.php">Account Login</a>
 <br>
 <br>
 <br>
