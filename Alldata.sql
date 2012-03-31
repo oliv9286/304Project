@@ -1,4 +1,4 @@
---Database Table Creation  
+--Database Table Creation
 
 drop table Returns;
 drop table Stores_Purchased;
@@ -33,7 +33,7 @@ Platform varchar(30),
 Publisher varchar(60),
 foreign key (Serial_Number) references Item ON DELETE CASCADE);
 
-CREATE TABLE New_Game 
+CREATE TABLE New_Game
 (Serial_Number integer not null PRIMARY KEY,
 FOREIGN KEY (Serial_Number) REFERENCES Item ON DELETE CASCADE);
 
@@ -87,8 +87,8 @@ FOREIGN KEY (Manager_ID) REFERENCES Employee ON DELETE CASCADE,
 FOREIGN KEY (Employee_ID) REFERENCES Employee ON DELETE CASCADE);
 
 CREATE TABLE Sells
-(Employee_ID INTeger not null, 
-Serial_Number INTeger not null, 
+(Employee_ID INTeger not null,
+Serial_Number INTeger not null,
 Number_Copies INTeger,
 PRIMARY KEY (Employee_ID, Serial_Number),
 FOREIGN KEY (Employee_ID) REFERENCES Employee ON DELETE CASCADE,
@@ -511,28 +511,28 @@ insert into account values
 (00000010, 30, 'Eric Yen', '1433 Matthew Street, Vancouver, Canada', 7789022311);
 
 insert into Payment_Record values
-(00000001, 'Credit Card', 59.99, '02-FEB-2011');
+(00000001, 'Credit Card', 29.99, '02-FEB-2011');
 
 insert into Payment_Record values
-(00000002, 'Debit Card', 49.99, '03-FEB-2012');
+(00000002, 'Debit Card', 24.99, '03-FEB-2012');
 
 insert into Payment_Record values
-(00000003, 'Points', 39.99, '05-FEB-2012');
+(00000003, 'Points', 29.99, '05-FEB-2012');
 
 insert into Payment_Record values
-(00000004, 'Credit Card', 29.99, '01-DEC-2013');
+(00000004, 'Credit Card', 24.99, '01-DEC-2013');
 
 insert into Payment_Record values
-(00000005, 'Points', 29.99, '02-JAN-2011');
+(00000005, 'Points', 39.99, '02-JAN-2011');
 
 insert into Payment_Record values
-(00000006, 'Points', 29.99, '03-FEB-2012');
+(00000006, 'Points', 59.99, '03-FEB-2012');
 
 insert into Payment_Record values
-(00000007, 'Points', 39.99, '04-MAR-2013');
+(00000007, 'Points', 129.97, '04-MAR-2013');
 
 insert into Payment_Record values
-(00000010, 'Credit Card', 29.99, '09-NOV-2013');
+(00000010, 'Credit Card', 634.96, '09-NOV-2013');
 
 insert into Makes values
 (00000001, 00000001);
