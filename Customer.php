@@ -53,14 +53,17 @@ Modify This Account Info:<br>
 <input type="submit" name="modify" value="Modify!"/>
 </form>
 
-
+<form method="post" action="Customer.php?name" >
+View all payment record of this account 
+	<input type="text" name="payment" value="Account ID"/>
+	<input type="submit" name="paid" value="Go!"/>
+</form>
   
 <form method="post" action="Customer.php?name" >
 View all purchase history of this account 
 	<input type="text" name="customer" value="Account ID"/>
 	<input type="submit" name="submit" value="Go!"/>
 </form>
-
 
 
 <form method="post" action="Customer.php?name" >
@@ -103,7 +106,7 @@ Delete returns for this account
 		    $parsed1 = OCIParse($db_conn, $sql1);
 		    $result1=OCIExecute($parsed1, OCI_DEFAULT);
 		    } else
-		    echo "<br>Input not of correct type!<br>";
+		    echo "<br><font color='FF0000'>Input not of correct type!</font><br>";
 	    }
 	    	if (!(strcmp($address, "New Address") == 0)) {
 		    	 if(preg_match("/[A-Z  | a-z | 0-9]+/", $_POST['AAddress'])){
@@ -111,7 +114,7 @@ Delete returns for this account
 		    $parsed2 = OCIParse($db_conn, $sql2);
 		    $result2=OCIExecute($parsed2, OCI_DEFAULT);
 		    } else
-		    echo "<br>Input not of correct type!<br>";
+		    echo "<br><font color='FF0000'>Input not of correct type!</font><br>";
 	    }	    
 	    	if (!(strcmp($phone, "New Phone Number") == 0)){
 		    	 if(preg_match("/[0-9]+/", $_POST['APhone'])){
@@ -119,7 +122,7 @@ Delete returns for this account
 		    $parsed3 = OCIParse($db_conn, $sql3);
 		    $result3=OCIExecute($parsed3, OCI_DEFAULT);
 		    } else
-		    echo "<br>Input not of correct type!<br>";
+		    echo "<br><font color='FF0000'>Input not of correct type!</font><br>";
 	    }
 	    	OCICommit($db_conn);
 	    	$sql4 = "select * from account where ACCOUNT_ID='".$account."'";	    
@@ -136,7 +139,7 @@ Delete returns for this account
 	  echo "</table>";
 		    
 		  } else
-		  echo "<br>Input not of correct type!<br>";
+		  echo "<br><font color='FF0000'>Input not of correct type!</font><br>";
 	    }
 	  }
 	}
@@ -146,7 +149,43 @@ Delete returns for this account
 
   ?>
   
+
+ <?php
+	
+	
+    if($db_conn) {
+      if(isset($_POST['paid'])) {
+	    if(isset($_GET['name'])) {
+	      if(preg_match("/[0-9]+/", $_POST['payment'])){
+		    $payment=$_POST['payment'];
+		    echo "<br>".$payment."<br>";
+		  
+		    $sqlpay = "select p.sale_number, p.method_payment, p.total_cost, p.pdate from payment_record p, makes m where p.sale_number = m.sale_number AND m.account_id = ".$payment."";
+		    $resultpay = executePlainSQL($sqlpay);
+		    
+			    //prints results from a select statement
+	  echo "<br>Got data from table Payment_Record:<br>";
+	  echo "<table>";
+	  echo "<tr><th>Sale Number</th><th>Method of Payment</th><th>Total Cost</th><th>Payment Date</th></tr>";
+
+	  while ($row = OCI_Fetch_Array($resultpay, OCI_BOTH)) {
+		echo "<tr><td>" . $row["SALE_NUMBER"] . "</td><td>" . $row["METHOD_PAYMENT"] . "</td><td>" . $row["TOTAL_COST"] . "</td><td>" . $row["PDATE"] . "</td><td>"; //or just use "echo $row[0]" 
+	  }
+	  echo "</table>";
+    
+		    
+		  } else
+		  echo "<br><font color='FF0000'>Input not of correct type!</font><br>";
+	    }
+	  }
+	}
+	else {
+	  echo "<p>Please enter an account ID.</p>";
+	}
+
+   ?>
   
+    
 <?php
 	
 	
@@ -157,22 +196,22 @@ Delete returns for this account
 		    $purchase=$_POST['customer'];
 		    echo "<br>".$purchase."<br>";
 		  
-		    $sql = "select I.Serial_Number, I.PName from Account A, Makes M, Stores_Purchased S, Item I where A.Account_ID = M.Account_ID AND A.Account_ID = ".$purchase." AND M.Sale_Number = S.Sale_Number AND S.Serial_Number = I.Serial_Number";
+		    $sql = "select S.Sale_Number, I.Serial_Number, I.PName from Account A, Makes M, Stores_Purchased S, Item I where A.Account_ID = M.Account_ID AND A.Account_ID = ".$purchase." AND M.Sale_Number = S.Sale_Number AND S.Serial_Number = I.Serial_Number";
 		    $result = executePlainSQL($sql);
 		    
 			    //prints results from a select statement
 	  echo "<br>Got data from table Item:<br>";
 	  echo "<table>";
-	  echo "<tr><th>Serial Number</th><th>Product Name</th></tr>";
+	  echo "<tr><th>Sale Number</th><th>Serial Number</th><th>Product Name</th></tr>";
 
 	  while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
-		echo "<tr><td>" . $row["SERIAL_NUMBER"] . "</td><td>" . $row["PNAME"] . "</td><td>"; //or just use "echo $row[0]" 
+		echo "<tr><td>" . $row["SALE_NUMBER"] . "</td><td>" . $row["SERIAL_NUMBER"] . "</td><td>" . $row["PNAME"] . "</td><td>"; //or just use "echo $row[0]" 
 	  }
 	  echo "</table>";
     
 		    
 		  } else
-		  echo "<br>Input not of correct type!<br>";
+		  echo "<br><font color='FF0000'>Input not of correct type!</font><br>";
 	    }
 	  }
 	}
@@ -208,7 +247,7 @@ Delete returns for this account
     
 		    
 		  } else
-		  echo "<br>Input not of correct type!<br>";
+		  echo "<br><font color='FF0000'>Input not of correct type!</font><br>";
 	    }
 	  }
 	}
@@ -243,7 +282,7 @@ Delete returns for this account
     
 		    
 		  } else
-		  echo "<br>Input not of correct type!<br>";
+		  echo "<br><font color='FF0000'>Input not of correct type!</font><br>";
 	    }
 	  }
 	}
@@ -283,7 +322,7 @@ Delete returns for this account
     
 		    
 		  } else
-		  echo "<br>Input not of correct type!<br>";
+		  echo "<br><font color='FF0000'>Input not of correct type!</font><br>";
 	    }
 	  }
 	}
