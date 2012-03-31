@@ -66,9 +66,22 @@ View all purchase history of this account
 <form method="post" action="Customer.php?name" >
 View points for this account 
 	<input type="text" name="account" value="Account ID"/>
-	<input type="submit" name="search" value="View!"/>
+	<input type="submit" name="search" value="Go!"/>
 </form>
 
+
+<form method="post" action="Customer.php?name" >
+View returns for this account 
+	<input type="text" name="return" value="Account ID"/>
+	<input type="submit" name="find" value="Go!"/>
+</form>
+
+<form method="post" action="Customer.php?name">
+Delete returns for this account
+	<input type="text" name="delete" value="Account ID"/>
+	<input type="submit" name="deleter" value="Go!"/>
+</form>
+    
 <?php
 	
 	
@@ -90,7 +103,7 @@ View points for this account
 		    $parsed1 = OCIParse($db_conn, $sql1);
 		    $result1=OCIExecute($parsed1, OCI_DEFAULT);
 		    } else
-		    echo "Input not of correct type!";
+		    echo "<br>Input not of correct type!<br>";
 	    }
 	    	if (!(strcmp($address, "New Address") == 0)) {
 		    	 if(preg_match("/[A-Z  | a-z | 0-9]+/", $_POST['AAddress'])){
@@ -98,7 +111,7 @@ View points for this account
 		    $parsed2 = OCIParse($db_conn, $sql2);
 		    $result2=OCIExecute($parsed2, OCI_DEFAULT);
 		    } else
-		    echo "Input not of correct type!";
+		    echo "<br>Input not of correct type!<br>";
 	    }	    
 	    	if (!(strcmp($phone, "New Phone Number") == 0)){
 		    	 if(preg_match("/[0-9]+/", $_POST['APhone'])){
@@ -106,7 +119,7 @@ View points for this account
 		    $parsed3 = OCIParse($db_conn, $sql3);
 		    $result3=OCIExecute($parsed3, OCI_DEFAULT);
 		    } else
-		    echo "Input not of correct type!";
+		    echo "<br>Input not of correct type!<br>";
 	    }
 	    	OCICommit($db_conn);
 	    	$sql4 = "select * from account where ACCOUNT_ID='".$account."'";	    
@@ -123,7 +136,7 @@ View points for this account
 	  echo "</table>";
 		    
 		  } else
-		  echo "Input not of correct type!";
+		  echo "<br>Input not of correct type!<br>";
 	    }
 	  }
 	}
@@ -159,7 +172,7 @@ View points for this account
     
 		    
 		  } else
-		  echo "Input not of correct type!";
+		  echo "<br>Input not of correct type!<br>";
 	    }
 	  }
 	}
@@ -180,7 +193,7 @@ View points for this account
 		    $accountp=$_POST['account'];
 		    echo "<br>".$accountp."<br>";
 		  
-		    $sqlp = "select a.points from Account a where Account_ID =  ".$accountp."";
+		    $sqlp = "select a.points from Account a where a.Account_ID =  ".$accountp."";
 		    $resultp = executePlainSQL($sqlp);
 		    
 			    //prints results from a select statement
@@ -195,7 +208,82 @@ View points for this account
     
 		    
 		  } else
-		  echo "Input not of correct type!";
+		  echo "<br>Input not of correct type!<br>";
+	    }
+	  }
+	}
+	else {
+	  echo "<p>Please enter an account ID.</p>";
+	}
+
+  ?>
+  
+  <?php
+	
+	
+    if($db_conn) {
+      if(isset($_POST['find'])) {
+	    if(isset($_GET['name'])) {
+	      if(preg_match("/[0-9]+/", $_POST['return'])){
+		    $accountr=$_POST['return'];
+		    echo "<br>".$accountr."<br>";
+		  
+		    $sqlr = "select I.pname, R.return_date from Returns R, Item I where R.Account_ID =  ".$accountr." AND I.Serial_Number = R.Serial_Number";
+		    $resultp = executePlainSQL($sqlr);
+		    
+			    //prints results from a select statement
+	  echo "<br>Got data from table Returns:<br>";
+	  echo "<table>";
+	  echo "<tr><th>Product Name</th><th>Return Date</th></tr>";
+
+	  while ($row = OCI_Fetch_Array($resultp, OCI_BOTH)) {
+		echo "<tr><td>" . $row["PNAME"] . "</td><td>" . $row["RETURN_DATE"] . "</td><td>"; //or just use "echo $row[0]" 
+	  }
+	  echo "</table>";
+    
+		    
+		  } else
+		  echo "<br>Input not of correct type!<br>";
+	    }
+	  }
+	}
+	else {
+	  echo "<p>Please enter an account ID.</p>";
+	}
+
+  ?>
+  
+  <?php
+	
+	
+    if($db_conn) {
+      if(isset($_POST['deleter'])) {
+	    if(isset($_GET['name'])) {
+	      if(preg_match("/[0-9]+/", $_POST['delete'])){
+		    $accountd=$_POST['delete'];
+		    echo "<br>".$accountd."<br>";
+		  
+		    $sqld = "delete returns where account_id = ".$accountd." ";
+		    $parsedd = OCIParse($db_conn, $sqld);
+		    $resultd=OCIExecute($parsedd, OCI_DEFAULT);
+		    OCICommit($db_conn);
+		    
+		    $sqlpd = "select * from returns";	    
+		    $resultpd = executePlainSQL($sqlpd);
+		    
+			    //prints results from a select statement
+	  echo "<br>Got data from table Returns:<br>";
+	  echo "<table>";
+	  echo "<tr><th>Account ID</th><th>Serial Number</th><th>Return Date</th></tr>";
+
+	  while ($row = OCI_Fetch_Array($resultpd, OCI_BOTH)) {
+		echo "<tr><td>" . $row["ACCOUNT_ID"] . "</td><td>" . $row["SERIAL_NUMBER"] . "</td><td>" . $row["RETURN_DATE"] . "</td><td>"; //or just use "echo $row[0]" 
+	  }
+	  echo "</table>";
+    
+		    
+		  } else
+		  echo "<br>Input not of correct type!<br>";
 	    }
 	  }
 	}
