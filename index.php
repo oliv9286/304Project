@@ -7,7 +7,7 @@
 <div class="pos">
 <?php
     $success = true;
-	$db_conn = OCILogon("ora_m4s7", "a44406106", "ug");
+	$db_conn = OCILogon("ora_x0g7", "a61449088", "ug");
 	
 	function executePlainSQL($cmdstr) { //takes a plain (no bound variables) SQL command and executes it
 	//echo "<br>running ".$cmdstr."<br>";
@@ -87,7 +87,7 @@ Find the game genre with the
 <input type="submit" name="genreaggregationsubmit" value="Go!"/>
 </form>
 
-</br></br></br></br></br>
+</br></br></br>
 
 <form method="post" action="index.php?newgames" id="newgames">
 <input type="submit" name="NewGameSubmit" value="New Games"/> 
@@ -109,7 +109,7 @@ Find the game genre with the
 		    $name=$_POST['namesearch'];
 		    echo "<br>".$name."<br>";
 		  
-		    $sql = "select i.pname, i.price, i.quantity from item i where i.pname LIKE '%".$name."%'";
+		    $sql = "select i.pname, i.price, i.quantity from item i where UPPER(i.pname) LIKE UPPER('%".$name."%')";
 		    $result = executePlainSQL($sql);
 			
 			echo "<br>Item search: ".$name."<br>";
@@ -157,7 +157,7 @@ Find the game genre with the
   	        if(preg_match("/[A-Z  | a-z]+/", $_POST['genresearch'])){
 
 				$genre=$_POST['genresearch'];
-				$sql = "select g.serial_number, i.pname, u.discount from Game g, used_game u, item i where g.serial_number = u.serial_number AND i.serial_number = g.serial_number AND g.genre = '".$genre."'";
+				$sql = "select g.serial_number, i.pname, u.discount from Game g, used_game u, item i where g.serial_number = u.serial_number AND i.serial_number = g.serial_number AND UPPER(g.genre) = UPPER('".$genre."')";
 		
 				$result = executePlainSQL($sql);
 				
@@ -221,7 +221,7 @@ Find the game genre with the
 				echo "<tr><th>Average of all items</th></tr>";
 
 				while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
-					echo "<tr><td>" . $row["AVG(PRICE)"] . "</td></tr>"; //or just use "echo $row[0]" 
+					echo "<tr><td>" . round($row["AVG(PRICE)"], 2) . "</td></tr>"; //or just use "echo $row[0]" 
 				}
 				echo "</table>";				
 			
@@ -251,7 +251,7 @@ Find the game genre with the
 			echo "<tr><th>Platform</th><th>Average</th></tr>";
 
 			while ($row = OCI_Fetch_Array($viewresult, OCI_BOTH)) {
-				echo "<tr><td>" . $row["PLATFORM"] . "</td><td>" . $row["AVERAGE"] . "</td></tr>"; //or just use "echo $row[0]" 
+				echo "<tr><td>" . $row["PLATFORM"] . "</td><td>" . round($row["AVERAGE"], 2) . "</td></tr>"; //or just use "echo $row[0]" 
 			}
 			echo "</table>";	
 			
@@ -285,7 +285,7 @@ Find the game genre with the
 			echo "<tr><th>Platform</th><th>Average</th></tr>";
 
 			while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
-				echo "<tr><td>" . $row["PLATFORM"] . "</td><td>" . $row["AVERAGE"] . "</td></tr>"; //or just use "echo $row[0]" 
+				echo "<tr><td>" . $row["PLATFORM"] . "</td><td>" . round($row["AVERAGE"], 2) . "</td></tr>"; //or just use "echo $row[0]" 
 			}
 			echo "</table>";				
 			
@@ -315,7 +315,7 @@ Find the game genre with the
 			echo "<tr><th>Genre</th><th>Average</th></tr>";
 
 			while ($row = OCI_Fetch_Array($viewresult, OCI_BOTH)) {
-				echo "<tr><td>" . $row["GENRE"] . "</td><td>" . $row["AVERAGE"] . "</td></tr>"; //or just use "echo $row[0]" 
+				echo "<tr><td>" . $row["GENRE"] . "</td><td>" . round($row["AVERAGE"], 2) . "</td></tr>"; //or just use "echo $row[0]" 
 			}
 			echo "</table>";	
 			
@@ -346,7 +346,7 @@ Find the game genre with the
 			echo "<table>";
 			echo "<tr><th>Genre</th><th>Average</th></tr>";			
 			while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
-				echo "<tr><td>" . $row["GENRE"] . "</td><td>" . $row["AVERAGE"] . "</td></tr>"; //or just use "echo $row[0]" 
+				echo "<tr><td>" . $row["GENRE"] . "</td><td>" . round($row["AVERAGE"], 2) . "</td></tr>"; //or just use "echo $row[0]" 
 			}
 			echo "</table>";	
 			$sqldrop = "drop view GenreAverage";
@@ -400,7 +400,6 @@ Find the game genre with the
 	  }	  
 	  
 	  else {
-	        echo "<p>Please enter search query</p>";
 	  }		
 	}
 	
