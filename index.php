@@ -105,7 +105,7 @@ Find the game genre with the
     if($db_conn) {
       if(isset($_POST['namesubmit'])) {
 	    if(isset($_GET['name'])) {
-	      if(preg_match("/[A-Z  | a-z]+/", $_POST['namesearch'])){
+	      if(preg_match("/^[0-9a-zA-Z\s]+$/", $_POST['namesearch'])){
 		    $name=$_POST['namesearch'];
 		    echo "<br>".$name."<br>";
 		  
@@ -122,7 +122,7 @@ Find the game genre with the
 			echo "</table>";		    
 		  }
 		  else {
-			echo "<p>Invalid Entry. Please enter letters and numbers only <p>";
+			echo "<p><font color='FF0000'>Invalid Entry. Please enter letters and numbers only </font><p>";
 		  }
 		  
 	    }
@@ -148,7 +148,7 @@ Find the game genre with the
 			}
 			
 			else{
-				echo "<p>Invalid Price. Please enter only numberical values</p>";
+				echo "<p><font color='FF0000'>Invalid Price. Please enter only numberical values</font></p>";
 			}			 
 		}
 	  }
@@ -171,7 +171,7 @@ Find the game genre with the
 				echo "</table>";
 			}
 			else {
-			    echo "<p>Invalid Entry. Please enter letters only <p>";
+			    echo "<p><font color='FF0000'>Invalid Entry. Please enter letters only </font><p>";
 			
 			}
 				
