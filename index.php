@@ -254,7 +254,8 @@ Find the game genre with the
 							select g.platform, count(DISTINCT(i.pname)) as gameCount
 							from game g, item i
 							where g.serial_number = i.serial_number
-							group by g.platform";
+							group by g.platform
+							having count(*) >= 1";
 			$viewresult = executePlainSQL($sqlcreateview);			
 
 			$sqlview = "select * from PlatformCount";
