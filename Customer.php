@@ -91,7 +91,7 @@ Buy an item using this account
 Return an item using this account 
 	<input type="text" name="returner" value="Account ID"/>
 	<input type="text" name="ritem" value="Serial Number"/>
-	<input type="submit" name="return" value="Return!"/>
+	<input type="submit" name="returned" value="Return!"/>
 </form>
 
 </br>
@@ -125,7 +125,7 @@ Return an item using this account
 	
 	
     if($db_conn) {
-      if(isset($_POST['return'])) {
+      if(isset($_POST['returned'])) {
 	    if(isset($_GET['name'])) {
 	      if(preg_match("/^[0-9]+$/", $_POST['returner'])){
 		      if (preg_match("/^[0-9]+$/", $_POST['ritem'])){
@@ -364,7 +364,7 @@ Return an item using this account
 		    $result = executePlainSQL($sql);
 		    
 			    //prints results from a select statement
-	  echo "<br>Got data from table Item:<br>";
+	  echo "<br>Got data from table Stores Purchased and Item:<br>";
 	  echo "<table>";
 	  echo "<tr><th>Sale Number</th><th>Serial Number</th><th>Product Name</th></tr>";
 
