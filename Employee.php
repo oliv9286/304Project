@@ -82,7 +82,11 @@ Create New Account:<br>
 <input type="submit" name="add" value="Add">
 </form>
 
-
+<form method="post" action="Employee.php?name">
+Delete returns for this account 
+<input type="text" name="delete" value="Account ID">
+<input type="submit" name ="deleter" value="Delete">
+</form>
 
 
 <form method ="post" action="Employee.php?name">
@@ -437,6 +441,47 @@ Find the customers who have purchased all consoles:
 }
 	
 ?>
+
+
+  <?php
+	
+	
+    if($db_conn) {
+      if(isset($_POST['deleter'])) {
+	    if(isset($_GET['name'])) {
+	      if(preg_match("/[0-9]+/", $_POST['delete'])){
+		    $accountd=$_POST['delete'];
+		    echo "<br> Delete returns for Account ID: ".$accountd."<br>";
+		  
+		    $sqld = "delete returns where account_id = ".$accountd." ";
+		    $parsedd = OCIParse($db_conn, $sqld);
+		    $resultd=OCIExecute($parsedd, OCI_DEFAULT);
+		    OCICommit($db_conn);
+		    
+		    $sqlpd = "select * from returns";	    
+		    $resultpd = executePlainSQL($sqlpd);
+		    
+			    //prints results from a select statement
+	  echo "<br>Got data from table Returns:<br>";
+	  echo "<table>";
+	  echo "<tr><th>Account ID</th><th>Serial Number</th><th>Return Date</th></tr>";
+
+	  while ($row = OCI_Fetch_Array($resultpd, OCI_BOTH)) {
+		echo "<tr><td>" . $row["ACCOUNT_ID"] . "</td><td>" . $row["SERIAL_NUMBER"] . "</td><td>" . $row["RETURN_DATE"] . "</td><td>"; //or just use "echo $row[0]" 
+	  }
+	  echo "</table>";
+    
+		    
+		  } else
+		  echo "<br><font color='FF0000'>Input Type Incorrect! AccountID Must Be Numbers</font><br>";
+	    }
+	  }
+	}
+	else {
+	  echo "<p>Please enter an account ID.</p>";
+	}
+
+  ?>
 </div>
 
 
