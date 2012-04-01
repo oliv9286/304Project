@@ -132,7 +132,7 @@
 	  echo "</table>";
     }
 	
-			 function printHardwareResult($result) { //prints results from a select statement
+	function printHardwareResult($result) { //prints results from a select statement
 	  echo "<br>Got data from Hardware table<br>";
 	  echo "<table>";
 	  echo "<tr><th>Serial_Number</th><th>Type</th><th>Company</th></tr>";
@@ -153,6 +153,17 @@
 	  }
 	  echo "</table>";
     }
+
+	function printHiresResult($result) { //prints results from a select statement
+	  echo "<br>Got data from Hires table<br>";
+	  echo "<table>";
+	  echo "<tr><th>Manager ID</th><th>Manager name</th><th>Employee ID</th></tr>";
+
+	  while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
+		echo "<tr><td>" . $row["MANAGER_ID"] . "</td><td>" . $row["ENAME"] . "</td><td>" . $row["EMPLOYEE_ID"] . "</td><td>"; //or just use "echo $row[0]" 
+	  }
+	  echo "</table>";
+    }	
 	
 	function printInsertResult($result) { //prints results from a select statement
 	  echo "<br> Your Item is inserted <br>";
@@ -310,6 +321,14 @@ All Accounts --
 <form method="post" action="Manager.php?allclerks" id ="allp">
 All Clerks --
 <input type="submit" name="allClerksSubmit" value="Find!"/>
+</form>
+</td>
+</tr>
+</table>
+
+<form method="post" action="Manager.php?allhires" id ="allp">
+All Hires --
+<input type="submit" name="allHiresSubmit" value="Find!"/>
 </form>
 </td>
 </tr>
@@ -806,6 +825,18 @@ All Clerks --
 		  //}
 	    }
 	  }
+	  
+	  else if(isset($_POST['allHiresSubmit'])) {
+	    if(isset($_GET['allhires'])) {
+	    //  if(preg_match("/[A-Z  | a-z]+/", $_POST['clerk'])){
+		  
+		    $sql = "select h.Manager_ID, e.EName, h.Employee_ID from Employee e, Hires h where h.Manager_ID = e.Employee_ID";
+		    $result = executePlainSQL($sql);
+			printHiresResult($result);
+		    
+		  //}
+	    }
+	  }	  
 	  
 	        else if(isset($_POST['AllGamesSubmit'])) {
 			if(isset($_GET['viewallgames'])) {

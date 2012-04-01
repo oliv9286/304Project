@@ -88,14 +88,7 @@ Delete returns for this account
 <input type="submit" name ="deleter" value="Delete">
 </form>
 
-<form method="post" action="Employee.php?name">
-Add Return Information:
-<input type="text" name="RAccountID" value="Account ID"/>
-returned
-<input type="text" name="RSerial" value="Serial Number"/>
-<input type="submit" name="addreturn" value="Add">
 
-</form>
 
 
 
@@ -118,7 +111,7 @@ Find the sum of all purchases from store <input type="submit" name="go" value="G
 
 
 <form method="post" action="Employee.php?name">
-Find the customers who have purchased all consoles:
+Find the customers who have returned all consoles:
 <input type="submit" name="find" value="Find">
 </form>
 <br>
@@ -148,12 +141,14 @@ Find the customers who have purchased all consoles:
 		if($db_conn){
 		if(isset($_POST['find'])){
 			if(isset($_GET['name'])){
-			$cus = "select a.account_id, a.aname
-					from account a
-					where a.account_id in (select a2.account_id
-											from account a2, hardware h, stores_purchased s, makes m
-											where h.type ='Console' AND s.serial_number = h.serial_number 
-											AND m.sale_number = s.sale_number AND a2.account_id= m.account_id)";
+			$cus = "select A.Account_ID, A.AName
+					from account A
+					where a.account_id in ( select r.account_id
+											from returns r
+											group by r.account_id
+											having count(distinct(r.serial_number)) >= (select count(*)
+																from hardware
+																where type ='Console'))";
 				   
 			$cus_result = executePlainSQL($cus);
 			
@@ -493,58 +488,7 @@ Find the customers who have purchased all consoles:
 	}
 
   ?>
-  
-  <?php
-	    if($db_conn) {
-    	if(isset($_POST['addreturn'])){
-    		if(isset($_GET['name'])){
-    		if(preg_match("/[0-9]+/",$_POST['RAccountID']) && preg_match("/[0-9]+/",$_POST['RSerial'])){
-    		
-    			$raid=$_POST['RAccountID'];
-    			$serial = $_POST['RSerial'];
-    			
-    			
-    			echo "<br> AccountID".$raid." returns" .$serial. "<br>";
-    			
-    			$today = date ("d-M-Y");
-    			$add_return = "insert into returns values
-							   (".$raid.",".$serial.", '".$today."')";
-							   
-				$parse_re = OCIParse($db_conn, $add_return);
-				$result_re = OCIExecute($parse_re, OCI_DEFAULT);
-				OCICommit($db_conn);
-				
-				
-				
-    			
-    			
-    			
-    		
-    			
-    			$re = "SELECT *
-    				   from returns";
-    			$result_re_table = executePlainSQL($re);
-    		
-    	//prints modified employee info
-	  echo "<br>All Returns in the Database:<br>";
-	  echo "<table>";
-	  echo "<tr><th>AccountID</th><th>Serial Number</th></tr>";
 
-	  while ($row = OCI_Fetch_Array($result_re_table, OCI_BOTH)) {
-		echo "<tr><td>" . $row["ACCOUNT_ID"] . "</td><td>" . $row["SERIAL_NUMBER"] . "</td></tr>";
-	  }
-	  echo "</table>";
-    
-    
-    }else
-    				echo "<br><font color='ff0000'> Input Type Incorrect!AccountID and Serial Number Must Be Numbers</font><br>";  
-
-}
-}
-}
-
-
-?>
 </div>
 
 

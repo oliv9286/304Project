@@ -74,7 +74,7 @@ Find the platform with the
 <select name="platformaggregation">
 <option value="Most">Most</option>
 <option value="Least">Least</option>
-</select> unique games.
+</select> distinct games.
 <input type="submit" name="platformaggregationsubmit" value="Go!"/>
 </form>
 
@@ -90,6 +90,10 @@ Find the game genre with the
 </br>
 <table>
 <tr><td>
+<form method="post" action="index.php?allitems" id="allitems">
+<input type="submit" name="AllItemsSubmit" value="All Items"/>
+</form>
+</td><td>
 <form method="post" action="index.php?allgames" id="allgames">
 <input type="submit" name="AllGamesSubmit" value="All Games"/>
 </form>
@@ -107,6 +111,9 @@ Find the game genre with the
 </form>
 </td></tr>
 </table>
+
+
+
 
   <?php
 	
@@ -183,7 +190,6 @@ Find the game genre with the
 			    echo "<p><font color='FF0000'>Invalid Entry. Please enter letters only </font><p>";
 			
 			}
-				
 				
 
 		}
@@ -284,7 +290,7 @@ Find the game genre with the
 		
 				$result = executePlainSQL($sql);
 				
-				echo "<br>Platform with least Games</br>";
+				echo "<br>Platform with Least Games</br>";
 
 
 
@@ -361,6 +367,22 @@ Find the game genre with the
 			$viewdrop = executePlainSQL($sqldrop);			
 
 
+		}
+	  }
+
+      else if(isset($_POST['AllItemsSubmit'])) {
+	    if(isset($_GET['allitems'])) {
+			$sql = "select * from item";
+			$result = executePlainSQL($sql);
+			echo "<br>All Items</br>";
+			echo "<table>";
+			echo "<tr><th>Serial#</th><th>Product Name</th><th>Price</th><th>Quantity</th></tr>";
+			while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
+				echo "<tr><td>" . $row["SERIAL_NUMBER"] . "</td><td>" . $row["PNAME"] . "</td><td>" . $row["PRICE"] . "</td><td>" . $row["QUANTITY"] . "</td></tr>"; //or just use "echo $row[0]" 
+			}
+			echo "</table>";		
+		
+		
 		}
 	  }
 
