@@ -108,6 +108,59 @@ Find the sum of all purchases from store <input type="submit" name="go" value="G
 </form>
 
 
+<form method="post" action="Employee.php?name">
+Add
+<input type="text" name="addpoints" value="Points">
+points to Account ID
+<input type="text" name="AccountAddPoints" value="AccountID">
+<input type="submit" name="SubmitAddPoint" value="Add">
+</form>
+
+<?php
+	if($db_conn){
+		if(isset($_POST['SubmitAddPoint'])){
+			if(isset($_GET['name'])){
+			
+			$points = $_POST['addpoints'];
+			$account_ap = $_POST['AccountAddPoints'];
+			
+			
+			if(!=(strcmp($points, "Points"))==0){
+				if(preg_match("/[0-9]+/", $_POST['Points'])){
+					
+					$curr_point = "select A.Points
+									from Account A
+									where A.Account_ID = ".$account_ap."";
+					
+					$currpoint_result = executePlainSQL($curr_point);
+					
+					while ($row = OCI_Fetch_Array($cus_result,OCI_BOTH)){
+					$new_points = .$row['POINTS']. + $currpoint_result;
+					}
+					
+					//$new_points = $currpoint_result + $points;
+					
+					$set_point = "update Account 
+								  set Points = ".$new_points.";
+								  where Account_ID = ".$account_ap."";
+					
+					$parse_ap = OCIParse($db_conn, $set_point);
+					$execute_ap = OCIExecute($parse_ap, OCI_DEFAULT);
+					OCICommit($db_conn);
+					
+					$show_points = "select *
+									from Account
+									where Account_ID = ".$account_ap."";
+					$show_result = executePlainSQL($show_points);
+					
+				}else
+				echo "<br><font color='ff0000'>Input Type Incorrect! Points must be Integers</font><br>";
+			}else echo "<br><font color='ff0000'>Please Enter Points</font><br>";
+			}
+			}
+			}
+?>
+
 
 <form method="post" action="Employee.php?name">
 Find the customers who have returned all consoles:
@@ -335,6 +388,9 @@ Find the customers who have returned all consoles:
     		} else
     			echo "<br><font color='FF0000'>Input Type Incorrect! Address Must Be Numbers and Letters</font><br>";
     		}
+    		
+    		
+    		
     		
     		OCICommit($db_conn);
     		$new_info = "SELECT *
