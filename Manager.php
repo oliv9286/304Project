@@ -108,24 +108,26 @@
 	  echo "</table>";
     }
 	
-		 function printGameResult($result) { //prints results from a select statement
+		
+	
+	function printGameResult($result) { //prints results from a select statement
 	  echo "<br>Got data from Game table<br>";
 	  echo "<table>";
-	  echo "<tr><th>Serial_Number</th><th>Genre</th><th>Is_Used</th><th>Platform</th><th>Publisher</th></tr>";
+	  echo "<tr><th>Serial_Number</th><th>PName</th><th>Price</th><th>Quantity</th><th>Genre</th><th>Platform</th><th>Publisher</th></tr>";
 
 	  while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
-		echo "<tr><td>" . $row["SERIAL_NUMBER"] . "</td><td>" . $row["GENRE"] . "</td><td>" . $row["IS_USED"] . "</td><td>" . $row["PLATFORM"] . "</td><td>" . $row["PUBLISHER"] . "</td><td>"; //or just use "echo $row[0]" 
+		echo "<tr><td>" . $row["SERIAL_NUMBER"] . "</td><td>" . $row["PNAME"] . "</td><td>" . $row["PRICE"] . "</td><td>" . $row["QUANTITY"] . "</td><td>" . $row["GENRE"] . "</td><td>" . $row["PLATFORM"] . "</td><td>" . $row["PUBLISHER"] . "</td><td>"; //or just use "echo $row[0]" 
 		}
 	  echo "</table>";
     }
 	
 	function printUsedGameResult($result) { //prints results from a select statement
-	  echo "<br>Got data from Used_Game table<br>";
+	  echo "<br>Got data from Game table<br>";
 	  echo "<table>";
-	  echo "<tr><th>Serial_Number</th><th>Discount</th></tr>";
+	  echo "<tr><th>Serial_Number</th><th>PName</th><th>Price</th><th>Quantity</th><th>Genre</th><th>Discount</th><th>Platform</th><th>Publisher</th></tr>";
 
 	  while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
-		echo "<tr><td>" . $row["SERIAL_NUMBER"] . "</td><td>" . $row["DISCOUNT"] . "</td><td>"; //or just use "echo $row[0]" 
+		echo "<tr><td>" . $row["SERIAL_NUMBER"] . "</td><td>" . $row["PNAME"] . "</td><td>" . $row["PRICE"] . "</td><td>" . $row["QUANTITY"] . "</td><td>" . $row["GENRE"] . "</td><td>" . $row["DISCOUNT"] . "</td><td>" . $row["PLATFORM"] . "</td><td>" . $row["PUBLISHER"] . "</td><td>"; //or just use "echo $row[0]" 
 		}
 	  echo "</table>";
     }
@@ -220,9 +222,9 @@ Add New Game: <br>
 <select name="platformType">
 <option value="PS3">PS3</option>
 <option value="PC">PC</option>
-<option value="XBox">XBox 360</option>
-<option value="Wii">Wii</option>
-<option value="Vita">Vita</option>
+<option value="XBox">XBOX 360</option>
+<option value="Wii">WII</option>
+<option value="Vita">VITA</option>
 <option value="3DS">3DS</option>
 </select>
 
@@ -252,9 +254,9 @@ Add Used Game: <br>
 <select name="platformType">
 <option value="PS3">PS3</option>
 <option value="PC">PC</option>
-<option value="XBox">XBox 360</option>
-<option value="Wii">Wii</option>
-<option value="Vita">Vita</option>
+<option value="XBox">XBOX 360</option>
+<option value="Wii">WII</option>
+<option value="Vita">VITA</option>
 <option value="3DS">3DS</option>
 </select>
 
@@ -284,50 +286,76 @@ Delete Item:<br>
 <input type="text" name="delsnum" value="Serial Number" /><br>
 <input type="submit" name="deleteSubmit" value="Submit"/>
 </form>
-
+<table>
+<tr>
+<td>
 <form method="post" action="Manager.php?allpayment" id ="allp">
-All Payments<br>
+All Payments --
 <input type="submit" name="allPaymentSubmit" value="Find!"/>
 </form>
-
+</td>
+<td>
 <form method="post" action="Manager.php?allsales" id ="allp">
-All Sales<br>
+All Sales --
 <input type="submit" name="allSalesSubmit" value="Find!"/>
 </form>
-
+</td>
+<td>
 <form method="post" action="Manager.php?allaccounts" id ="allp">
-All Accounts<br>
+All Accounts --
 <input type="submit" name="allAccountsSubmit" value="Find!"/>
 </form>
-
+</td>
+<td>
 <form method="post" action="Manager.php?allclerks" id ="allp">
-All Clerks<br>
+All Clerks --
 <input type="submit" name="allClerksSubmit" value="Find!"/>
 </form>
+</td>
+</tr>
+</table>
 
+<table>
+<tr><td>
+<form method="post" action="Manager.php?viewallgames" id="allgames">
+<input type="submit" name="AllGamesSubmit" value="All Games"/>
+</form>
+</td><td>
+<form method="post" action="Manager.php?viewnewgames" id="newgames">
+<input type="submit" name="NewGameSubmit" value="New Games"/>
+</form>
+</td><td>
+<form method="post" action="Manager.php?viewusedgames" id="usedgames">
+<input type="submit" name="UsedGameSubmit" value="Used Games"/>
+</form>
+</td><td>
+<form method="post" action="Manager.php?viewhardware" id="hardware">
+<input type="submit" name="HardwareSubmit" value="Hardware"/>
+</form>
+</td></tr>
+</table>
 
 
 <?php
  if($db_conn) {
       if(isset($_POST['salessubmit'])) {
 	    if(isset($_GET['employeesales'])) {
-	      if(preg_match("/[A-Z  | a-z]+/", $_POST['clerk'])){
+	      if(preg_match("/^[A-Z  | a-z]+$/", $_POST['clerk'])){
 		    $name=$_POST['clerk'];
 		    echo "<br>".$clerk."<br>";
-		  
-		    $sql = "select e.EName, i.PName from Employee e, Sells s, Item i where e.Employee_ID = s.Employee_ID and s.Serial_Number = i.Serial_Number and e.EName='".$name."'";
+		    $sql = "select e.EName, i.PName from Employee e, Sells s, Item i where e.Employee_ID = s.Employee_ID and s.Serial_Number = i.Serial_Number and e.EName ='".$name."'";
 		    $result = executePlainSQL($sql);
 			printSalesResult($result);
 		    
 		  }
 		 else {
-			echo "<p><br><font color='FF0000'>Input Incorrect! Employee Name Must Be Numbers</font><br><p>";
+			echo "<p><br><font color='FF0000'>Input Incorrect! Employee Name Must Be Letters</font><br><p>";
 			}
 	    }
 	  }
 	  else if(isset($_POST['accTranSubmit'])) {
 	    if(isset($_GET['accounttransact'])) {
-	       if(preg_match("/[0-9]+/", $_POST['customer'])){
+	       if(preg_match("/^[0-9]+$/", $_POST['customer'])){
 		    $name=$_POST['customer'];
 		    echo "<br>".$customer."<br>";
 		  
@@ -344,15 +372,15 @@ All Clerks<br>
 	  else if(isset($_POST['insertSubmit'])) {
 	    if(isset($_GET['inserthardware'])) {
 		
-			 if(preg_match("/[0-9]+/", $_POST['serial_number']))
+			 if(preg_match("/^[0-9]+$/", $_POST['serial_number']))
 			 {
-				if(preg_match("/[A-Z  | a-z |0-9]+/", $_POST['PName']))
+				if(preg_match("/^[0-9a-zA-Z\s]+$/", $_POST['PName']))
 				{
-					if(preg_match("/[0-9]+/", $_POST['Price']))
+					if(preg_match("/^[0-9]+$/", $_POST['Price']))
 					{
-						if(preg_match("/[0-9]+/", $_POST['Quantity']))
+						if(preg_match("/^[0-9]+$/", $_POST['Quantity']))
 						{
-							if(preg_match("/[A-Z  | a-z]+/", $_POST['Company']))
+							if(preg_match("/^[0-9a-zA-Z\s]+$/", $_POST['Company']))
 							{	
 								 $sNum=$_POST['serial_number'];
 									$pName=$_POST['PName'];
@@ -421,15 +449,15 @@ All Clerks<br>
 	    if(isset($_GET['insertgame'])) {
 	    //  if(preg_match("/[A-Z  | a-z]+/", $_POST['clerk'])){
 		
-		if(preg_match("/[0-9]+/", $_POST['serial_number']))
+		if(preg_match("/^[0-9]+$/", $_POST['serial_number']))
 			 {
-				if(preg_match("/[A-Z  | a-z | 0-9]+/", $_POST['PName']))
+				if(preg_match("/^[0-9a-zA-Z\s]+$/", $_POST['PName']))
 				{
-					if(preg_match("/[0-9]+/", $_POST['Price']))
+					if(preg_match("/^[0-9]+$/", $_POST['Price']))
 					{
-						if(preg_match("/[0-9]+/", $_POST['Quantity']))
+						if(preg_match("/^[0-9]+$/", $_POST['Quantity']))
 						{
-							if(preg_match("/[A-Z  | a-z]+/", $_POST['Company']))
+							if(preg_match("/^[0-9a-zA-Z\s]+$/", $_POST['Company']))
 							{	
 							
 								$sNum=$_POST['serial_number'];
@@ -472,16 +500,16 @@ All Clerks<br>
 			
 								OCICommit($db_conn); 
 			
-								$sql4 = "select * from Game g";
+								$sql4 = "select i.Serial_Number, i.PName, i.Price, i.Quantity, g.Genre, g.Platform, g.Publisher from Item i, Game g where i.Serial_Number = g.Serial_Number";
 								$result4 = executePlainSQL($sql4);
 			
-								printInsertResult($r3);
+								//printInsertResult($r3);
 								printGameResult($result4);
 							
 							
 							}
 							 else {
-							echo "<p><br><font color='FF0000'>Incorrect Input! Company Name Must Be Letters</font><br><p>";
+							echo "<p><br><font color='FF0000'>Incorrect Input! Company Name Must Be Letters and/or Numbers</font><br><p>";
 							}
 						}
 						 else {
@@ -521,17 +549,17 @@ All Clerks<br>
 	    if(isset($_GET['insertusedgame'])) {
 	    //  if(preg_match("/[A-Z  | a-z]+/", $_POST['clerk'])){
 		
-		if(preg_match("/[0-9]+/", $_POST['serial_number']))
+		if(preg_match("/^[0-9]+$/", $_POST['serial_number']))
 			 {
-				if(preg_match("/[A-Z  | a-z | 0-9]+/", $_POST['PName']))
+				if(preg_match("/^[0-9a-zA-Z\s]+$/", $_POST['PName']))
 				{
-					if(preg_match("/[0-9]+/", $_POST['Price']))
+					if(preg_match("/^[0-9]+$/", $_POST['Price']))
 					{
-						if(preg_match("/[0-9]+/", $_POST['Discount']))
+						if(preg_match("/^[0-9]+$/", $_POST['Discount']))
 						{
-						if(preg_match("/[0-9]+/", $_POST['Quantity']))
+						if(preg_match("/^[0-9]+$/", $_POST['Quantity']))
 						{
-							if(preg_match("/[A-Z  | a-z]+/", $_POST['Company']))
+							if(preg_match("/^[0-9a-zA-Z\s]+$/", $_POST['Company']))
 							{	
 							
 								$sNum=$_POST['serial_number'];
@@ -576,16 +604,16 @@ All Clerks<br>
 			
 								OCICommit($db_conn); 
 			
-								$sql4 = "select * from Used_Game g";
+								$sql4 = "select i.Serial_Number, i.PName, i.Price, i.Quantity, g.Genre, u.Discount, g.Platform, g.Publisher from Item i, Game g, Used_Game u where i.Serial_Number = g.Serial_Number AND i.Serial_Number = u.Serial_Number";
 								$result4 = executePlainSQL($sql4);
 			
-								printInsertResult($r3);
+								//printInsertResult($r3);
 								printUsedGameResult($result4);
 							
 							
 							}
 							 else {
-							echo "<p><br><font color='FF0000'>Incorrect Input! Company Name Must Be Letters</font><br><p>";
+							echo "<p><br><font color='FF0000'>Incorrect Input! Company Name Must Be Letters and/or Numbers</font><br><p>";
 							}
 						}
 						 else {
@@ -632,9 +660,9 @@ All Clerks<br>
 	  
 	  else if(isset($_POST['stockSubmit'])) {
 	    if(isset($_GET['changestock'])) {
-	      if(preg_match("/[0-9]+/", $_POST['Serial']))
+	      if(preg_match("/^[0-9]+$/", $_POST['Serial']))
 		  {
-			if(preg_match("/[0-9]+/", $_POST['Quantity']))
+			if(preg_match("/^[0-9]+$/", $_POST['Quantity']))
 			{
 				$sNum=$_POST['Serial'];
 				$quan=$_POST['Quantity'];
@@ -646,9 +674,9 @@ All Clerks<br>
 				$r=OCIExecute($parsed, OCI_DEFAULT); 
 				OCICommit($db_conn); 
 			
-				$sql4 = "select * from Item i";
+				$sql4 = "select * from Item i where i.Serial_Number = '".$sNum."'";
 				$result4 = executePlainSQL($sql4);
-				printStockResult($r);
+				//printStockResult($r);
 				printItemResult($result4);
 		    
 		    }
@@ -665,7 +693,7 @@ All Clerks<br>
 	  
 	  	  else if(isset($_POST['modifySubmit'])) {
 	    if(isset($_GET['modifyitem'])) {
-	      if(preg_match("/[0-9]+/", $_POST['Serial']))
+	      if(preg_match("/^[0-9]+$/", $_POST['Serial']))
 		  {
 		  
 			$sNum=$_POST['Serial'];
@@ -675,7 +703,7 @@ All Clerks<br>
 			//echo "<br>".$quan."<br>";
 			
 			if (!(strcmp($pname, "New_Name") == 0)) {
-				if(preg_match("/[A-Z  | a-z |0-9]+/", $_POST['PName']))
+				if(preg_match("/^[0-9a-zA-Z\s]+$/", $_POST['PName']))
 				{
 					$sql = "update Item set PName ='".$pname."' where Serial_Number ='".$sNum."'";
 					$parsed = OCIParse($db_conn, $sql);
@@ -687,7 +715,7 @@ All Clerks<br>
 			}
 				
 			if (!(strcmp($price, "New_Price") == 0)) {	
-				if(preg_match("/[0-9]+/", $_POST['Price']))
+				if(preg_match("/^[0-9]+$/", $_POST['Price']))
 				{
 					$sql2 = "update Item set Price ='".$price."' where Serial_Number ='".$sNum."'";
 					$parsed2 = OCIParse($db_conn, $sql2);
@@ -700,7 +728,7 @@ All Clerks<br>
 		    }
 					OCICommit($db_conn); 
 					//printModifyResult($r2);
-					$sql4 = "select * from Item i";
+					$sql4 = "select * from Item i where i.Serial_Number = '".$sNum."'";
 					$result4 = executePlainSQL($sql4);
 					printItemResult($result4);
 
@@ -713,7 +741,7 @@ All Clerks<br>
 	  
 	  else if(isset($_POST['deleteSubmit'])) {
 	    if(isset($_GET['deleteitem'])) {
-	      if(preg_match("/[0-9]+/", $_POST['delsnum'])){
+	      if(preg_match("/^[0-9]+$/", $_POST['delsnum'])){
 			$del=$_POST['delsnum'];
 			$sqld = "delete Item where Serial_Number = ".$del." ";
 		    $parsedd = OCIParse($db_conn, $sqld);
@@ -778,6 +806,62 @@ All Clerks<br>
 		  //}
 	    }
 	  }
+	  
+	        else if(isset($_POST['AllGamesSubmit'])) {
+			if(isset($_GET['viewallgames'])) {
+				$sql = "select i.pname, g.genre, g.platform, i.price from Game g, Item i where g.serial_number=i.serial_number";
+				$result = executePlainSQL($sql);
+				echo "<br>All Games</br>";
+				echo "<table>";
+				echo "<tr><th>Game</th><th>Genre</th><th>Platform</th><th>Price</th></tr>";
+				while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
+				echo "<tr><td>" . $row["PNAME"] . "</td><td>" . $row["GENRE"] . "</td><td>" . $row["PLATFORM"] . "</td><td>" . $row["PRICE"] . "</td></tr>"; //or just use "echo $row[0]"
+			}
+			echo "</table>";
+		}
+		} 
+		 else if(isset($_POST['NewGameSubmit'])) {
+		if(isset($_GET['viewnewgames'])) {
+			$sql = "select i.pname, g.genre, g.platform, i.price from New_Game n, Game g, Item i where n.serial_number=g.serial_number AND n.serial_number = i.serial_number";
+			$result = executePlainSQL($sql);
+			echo "<br>New Games</br>";
+			echo "<table>";
+			echo "<tr><th>Game</th><th>Genre</th><th>Platform</th><th>Price</th></tr>";
+			while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
+				echo "<tr><td>" . $row["PNAME"] . "</td><td>" . $row["GENRE"] . "</td><td>" . $row["PLATFORM"] . "</td><td>" . $row["PRICE"] . "</td></tr>"; //or just use "echo $row[0]"
+			}
+			echo "</table>";
+		}
+	}
+	
+	      else if(isset($_POST['UsedGameSubmit'])) {
+			if(isset($_GET['viewusedgames'])) {
+			$sql = "select i.pname, g.genre, g.platform, i.price, u.discount from Used_Game u, Game g, Item i where u.serial_number=g.serial_number AND u.serial_number = i.serial_number";
+			$result = executePlainSQL($sql);
+			echo "<br>Used Games</br>";
+			echo "<table>";
+			echo "<tr><th>Game</th><th>Genre</th><th>Platform</th><th>Price</th><th>Discount</th></tr>";
+			while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
+				echo "<tr><td>" . $row["PNAME"] . "</td><td>" . $row["GENRE"] . "</td><td>" . $row["PLATFORM"] . "</td><td>" . $row["PRICE"] . "</td><td>" . $row["DISCOUNT"] . "</td></tr>"; //or just use "echo $row[0]"
+			}
+			echo "</table>";
+		}
+	}
+	
+	      else if(isset($_POST['HardwareSubmit'])) {
+			if(isset($_GET['viewhardware'])) {
+			$sql = "select i.pname, h.type, i.price from Hardware h, Item i where i.serial_number=h.serial_number";
+			$result = executePlainSQL($sql);
+			echo "<br>Hardware and Accessories</br>";
+			echo "<table>";
+			echo "<tr><th>Game</th><th>Type</th><th>Price</th></tr>";
+			while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
+				echo "<tr><td>" . $row["PNAME"] . "</td><td>" . $row["TYPE"] . "</td><td>" . $row["PRICE"] . "</td></tr>"; //or just use "echo $row[0]"
+			}
+			echo "</table>";
+		}
+	} 
+
 	  
 	  
 	  
