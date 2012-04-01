@@ -72,13 +72,6 @@ AAddress varCHAR(40),
 APhone INTeger,
 check (account_id >= 0));
 
-CREATE TABLE Payment_Record
-(Sale_Number INTeger not null PRIMARY KEY,
-Method_Payment varCHAR(15),
-Total_Cost float,
-PDate DATE,
-check (sale_number >= 0));
-
 CREATE TABLE Hires
 (Manager_ID INTeger not null,
 Employee_ID INTeger not null,
@@ -110,6 +103,13 @@ PRIMARY KEY (Employee_ID, Account_ID),
 FOREIGN KEY (Employee_ID) REFERENCES Employee ON DELETE CASCADE,
 FOREIGN KEY (Account_ID) REFERENCES Account ON DELETE CASCADE);
 
+CREATE TABLE Payment_Record
+(Sale_Number INTeger not null PRIMARY KEY,
+Method_Payment varCHAR(15),
+Total_Cost float,
+PDate DATE,
+check (sale_number >= 0));
+
 CREATE TABLE Makes
 (Account_ID INTeger not null,
 Sale_Number INTeger not null,
@@ -133,10 +133,10 @@ FOREIGN KEY (Serial_Number) REFERENCES Item ON DELETE CASCADE,
 FOREIGN KEY (Account_ID) REFERENCES Account ON DELETE CASCADE);
 
 insert into Item values
-(00000001,'The Elder Scrolls V: Skyrim', 59.99,20);
+(00000001,'The Elder Scrolls V Skyrim', 59.99,20);
 
 insert into Item values
-(00000002, 'The Elder Scrolls IV: Oblivion', 49.99, 15);
+(00000002, 'The Elder Scrolls IV Oblivion', 49.99, 15);
 
 insert into Item values
 (00000003, 'Final Fantasy XIII', 39.99, 15);
@@ -157,7 +157,7 @@ insert into Item values
 (00000008, 'Mass Effect 3', 59.99, 20);
 
 insert into Item values
-(00000009, 'Call of Duty: Black Ops', 39.99, 20);
+(00000009, 'Call of Duty Black Ops', 39.99, 20);
 
 insert into Item values
 (00000010, 'Mario Kart', 29.99, 10);
@@ -196,7 +196,7 @@ insert into Item values
 (00000021, 'Super Stardust Delta', 49.99, 2);
 
 insert into Item values
-(00000022, 'Kingdoms of Amalur: Reckoning', 59.99, 5);
+(00000022, 'Kingdoms of Amalur Reckoning', 59.99, 5);
 
 insert into Item values
 (00000023, 'Street Fighter x Tekken', 59.99, 4);
@@ -205,19 +205,19 @@ insert into Item values
 (00000024, 'UFC Undisputed 3', 59.99, 1);
 
 insert into Item values
-(00000025, 'Star Wars: The Old Republic', 59.99, 10);
+(00000025, 'Star Wars The Old Republic', 59.99, 10);
 
 insert into Item values
 (00000026, 'Unit 13', 49.99, 5);
 
 insert into Item values
-(00000027, 'Resident Evil: Operation Raccoon City', 59.99, 2);
+(00000027, 'Resident Evil Operation Raccoon City', 59.99, 2);
 
 insert into Item values
-(00000028, 'Kid Icarus: Uprising', 39.99, 5);
+(00000028, 'Kid Icarus Uprising', 39.99, 5);
 
 insert into Item values
-(00000029, 'Batman: Arkham City', 39.99, 10);
+(00000029, 'Batman Arkham City', 39.99, 10);
 
 insert into Item values
 (00000030, 'Xenoblade Chronicles', 49.99, 2);
@@ -517,19 +517,25 @@ insert into Payment_Record values
 (00000002, 'Debit Card', 24.99, '03-FEB-2012');
 
 insert into Payment_Record values
-(00000003, 'Points', 29.99, '05-FEB-2012');
+(00000003, 'Cash', 29.99, '05-FEB-2012');
 
 insert into Payment_Record values
-(00000004, 'Credit Card', 24.99, '01-DEC-2013');
+(00000004, 'Credit Card', 24.99, '01-DEC-2012');
 
 insert into Payment_Record values
 (00000005, 'Points', 39.99, '02-JAN-2011');
 
 insert into Payment_Record values
-(00000006, 'Points', 59.99, '03-FEB-2012');
+(00000006, 'Cash', 59.99, '03-FEB-2012');
 
 insert into Payment_Record values
-(00000007, 'Points', 129.97, '04-MAR-2013');
+(00000007, 'Points', 129.97, '24-MAR-2011');
+
+insert into Payment_Record values
+(00000008, 'Debit Card', 299.99, '04-APR-2012');
+
+insert into Payment_Record values
+(00000009, 'Points', 199.99, '13-JUN-2010');
 
 insert into Payment_Record values
 (00000010, 'Credit Card', 634.96, '09-NOV-2013');
@@ -554,6 +560,12 @@ insert into Makes values
 
 insert into Makes values
 (00000007, 00000007);
+
+insert into Makes values
+(00000008, 00000008);
+
+insert into Makes values
+(00000008, 00000009);
 
 insert into Makes values
 (00000007, 00000010);
@@ -584,6 +596,12 @@ insert into Stores_Purchased values
 
 insert into Stores_Purchased values
 (00000007, 00000009);
+
+insert into Stores_Purchased values
+(00000008, 00000011);
+
+insert into Stores_Purchased values
+(00000009, 00000012);
 
 insert into Stores_Purchased values
 (00000010, 00000011);
