@@ -91,7 +91,7 @@ Delete returns for this account
     if($db_conn) {
       if(isset($_POST['modify'])) {
 	    if(isset($_GET['name'])) {
-	      if(preg_match("/[0-9]+/", $_POST['AccountID'])){
+	      if(preg_match("/^[0-9]+$/", $_POST['AccountID'])){
 		    $account=$_POST['AccountID'];
 		    
 		    $name = $_POST['AName'];
@@ -106,7 +106,7 @@ Delete returns for this account
 		    $parsed1 = OCIParse($db_conn, $sql1);
 		    $result1=OCIExecute($parsed1, OCI_DEFAULT);
 		    } else
-		    echo "<br><font color='FF0000'>Input not of correct type!</font><br>";
+		    echo "<br><font color='FF0000'>Input not of correct type!  Please input letters only.</font><br>";
 	    }
 	    	if (!(strcmp($address, "New Address") == 0)) {
 		    	 if(preg_match("/[A-Z  | a-z | 0-9]+/", $_POST['AAddress'])){
@@ -114,15 +114,15 @@ Delete returns for this account
 		    $parsed2 = OCIParse($db_conn, $sql2);
 		    $result2=OCIExecute($parsed2, OCI_DEFAULT);
 		    } else
-		    echo "<br><font color='FF0000'>Input not of correct type!</font><br>";
+		    echo "<br><font color='FF0000'>Input not of correct type!  Please input letters and numbers only.</font><br>";
 	    }	    
 	    	if (!(strcmp($phone, "New Phone Number") == 0)){
-		    	 if(preg_match("/[0-9]+/", $_POST['APhone'])){
+		    	 if(preg_match("/^[0-9]+$/", $_POST['APhone'])){
 		    $sql3 = "update account set aphone ='".$phone."' where account_id ='".$account."'";
 		    $parsed3 = OCIParse($db_conn, $sql3);
 		    $result3=OCIExecute($parsed3, OCI_DEFAULT);
 		    } else
-		    echo "<br><font color='FF0000'>Input not of correct type!</font><br>";
+		    echo "<br><font color='FF0000'>Input not of correct type!  Please input numbers only.</font><br>";
 	    }
 	    	OCICommit($db_conn);
 	    	$sql4 = "select * from account where ACCOUNT_ID='".$account."'";	    
@@ -139,7 +139,7 @@ Delete returns for this account
 	  echo "</table>";
 		    
 		  } else
-		  echo "<br><font color='FF0000'>Input not of correct type!</font><br>";
+		  echo "<br><font color='FF0000'>Input not of correct type!  Please input numbers only.</font><br>";
 	    }
 	  }
 	}
@@ -156,7 +156,7 @@ Delete returns for this account
     if($db_conn) {
       if(isset($_POST['paid'])) {
 	    if(isset($_GET['name'])) {
-	      if(preg_match("/[0-9]+/", $_POST['payment'])){
+	      if(preg_match("/^[0-9]+$/", $_POST['payment'])){
 		    $payment=$_POST['payment'];
 		    echo "<br>".$payment."<br>";
 		  
@@ -175,7 +175,7 @@ Delete returns for this account
     
 		    
 		  } else
-		  echo "<br><font color='FF0000'>Input not of correct type!</font><br>";
+		  echo "<br><font color='FF0000'>Input not of correct type!  Please input numbers only.</font><br>";
 	    }
 	  }
 	}
@@ -192,7 +192,7 @@ Delete returns for this account
     if($db_conn) {
       if(isset($_POST['submit'])) {
 	    if(isset($_GET['name'])) {
-	      if(preg_match("/[0-9]+/", $_POST['customer'])){
+	      if(preg_match("/^[0-9]+$/", $_POST['customer'])){
 		    $purchase=$_POST['customer'];
 		    echo "<br>".$purchase."<br>";
 		  
@@ -211,7 +211,7 @@ Delete returns for this account
     
 		    
 		  } else
-		  echo "<br><font color='FF0000'>Input not of correct type!</font><br>";
+		  echo "<br><font color='FF0000'>Input not of correct type!  Please input numbers only.</font><br>";
 	    }
 	  }
 	}
@@ -228,7 +228,7 @@ Delete returns for this account
     if($db_conn) {
       if(isset($_POST['search'])) {
 	    if(isset($_GET['name'])) {
-	      if(preg_match("/[0-9]+/", $_POST['account'])){
+	      if(preg_match("/^[0-9]+$/", $_POST['account'])){
 		    $accountp=$_POST['account'];
 		    echo "<br>".$accountp."<br>";
 		  
@@ -247,7 +247,7 @@ Delete returns for this account
     
 		    
 		  } else
-		  echo "<br><font color='FF0000'>Input not of correct type!</font><br>";
+		  echo "<br><font color='FF0000'>Input not of correct type!  Please input numbers only.</font><br>";
 	    }
 	  }
 	}
@@ -263,7 +263,7 @@ Delete returns for this account
     if($db_conn) {
       if(isset($_POST['find'])) {
 	    if(isset($_GET['name'])) {
-	      if(preg_match("/[0-9]+/", $_POST['return'])){
+	      if(preg_match("/^[0-9]+$/", $_POST['return'])){
 		    $accountr=$_POST['return'];
 		    echo "<br>".$accountr."<br>";
 		  
@@ -282,7 +282,7 @@ Delete returns for this account
     
 		    
 		  } else
-		  echo "<br><font color='FF0000'>Input not of correct type!</font><br>";
+		  echo "<br><font color='FF0000'>Input not of correct type!  Please input numbers only.</font><br>";
 	    }
 	  }
 	}
@@ -298,7 +298,7 @@ Delete returns for this account
     if($db_conn) {
       if(isset($_POST['deleter'])) {
 	    if(isset($_GET['name'])) {
-	      if(preg_match("/[0-9]+/", $_POST['delete'])){
+	      if(preg_match("/^[0-9]+$/", $_POST['delete'])){
 		    $accountd=$_POST['delete'];
 		    echo "<br>".$accountd."<br>";
 		  
@@ -322,7 +322,7 @@ Delete returns for this account
     
 		    
 		  } else
-		  echo "<br><font color='FF0000'>Input not of correct type!</font><br>";
+		  echo "<br><font color='FF0000'>Input not of correct type!  Please input numbers only.</font><br>";
 	    }
 	  }
 	}
