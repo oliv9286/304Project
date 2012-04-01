@@ -8,6 +8,9 @@
 <div class="pos">
 
 <a href="index.php">Back</a>
+<br>
+<br>
+<br>
 
 <?php
     $success = true;
