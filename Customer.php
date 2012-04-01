@@ -83,7 +83,13 @@ View returns for this account
 Buy an item using this account 
 	<input type="text" name="buyer" value="Account ID"/>
 	<input type="text" name="item" value="Serial Number"/>
-	<input type="text" name="paymethod" value="Payment Method"/>
+	
+	<select name="paymethod">
+	<option value="Credit Card">Credit Card</option>
+	<option value="Debit Card">Debit Card</option>
+	<option value="Points">Points</option>
+	</select>
+	
 	<input type="submit" name="buy" value="Buy!"/>
 </form>
     
@@ -180,8 +186,8 @@ Return an item using this account
 		    $item=$_POST['item'];
 		    $paymethod=$_POST['paymethod'];
 		    
-		    echo "<br>".$buyer."<br>";
-		  
+		    echo "<br>".$buyer."<br>";	
+
 		    $sqlmax = "select max(sale_number) from payment_record";
     		$resultmax = executePlainSQL($sqlmax);
     		$rowmax = OCI_Fetch_Array($resultmax, OCI_BOTH);
@@ -204,7 +210,7 @@ Return an item using this account
     		$total = $rowprice["PRICE"]; // total price
     		 
     		$today =  date("d-M-Y"); //today's date
-    		
+			
     		$prinsert = "insert into Payment_Record values (".$sales.", '".$paymethod."', ".$total.", '".$today."')";
 		    $parsedpr = OCIParse($db_conn, $prinsert);
 		    $resultpr=OCIExecute($parsedpr, OCI_DEFAULT);
@@ -217,6 +223,23 @@ Return an item using this account
 		    $parsedsp = OCIParse($db_conn, $spinsert);
 		    $resultsp=OCIExecute($parsedsp, OCI_DEFAULT);
 		    
+		        		
+    		if ( strcmp ( $paymethod , "Points" ) == 0){
+			$oldpoints = "select points from account where account_id = ".$buyer."";
+    		$resultpoints = executePlainSQL($oldpoints);
+    		$rowpoints = OCI_Fetch_Array($resultpoints, OCI_BOTH);
+    		$pointsdecb = $rowpoints["POINTS"];
+    		$pointsdec = $pointsdecb - $total; //new points
+    		
+    		if ($pointsdec < 0)
+    		echo "<br><font color='FF0000'>Not enough points!  Choose another payment method.</font><br>";
+    		else {
+    		$pdec = "update account set points =".$pointsdec." where account_id = ".$buyer."";
+		    $parsedpdec = OCIParse($db_conn, $pdec);
+		    $resultpdec=OCIExecute($parsedpdec, OCI_DEFAULT); 
+	    		}
+			}
+			
 		    OCICommit($db_conn);
 		    
 		    $sqlbuy = "select m.account_id, m.sale_number, s.serial_number from makes m, stores_purchased s where m.account_id =".$buyer." AND m.sale_number = s.sale_number";	    

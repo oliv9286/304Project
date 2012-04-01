@@ -69,7 +69,7 @@ Points integer,
 AName varCHAR(30),
 AAddress varCHAR(40),
 APhone INTeger,
-check (account_id >= 0));
+check (account_id >= 0 AND points >=0));
 
 CREATE TABLE Hires
 (Manager_ID INTeger not null,
@@ -306,7 +306,7 @@ insert into game values
 (00000028, 'ACTION', 0, '3DS', 'Nintendo');
 
 insert into game values
-(00000029, 'ACTION', 0, 'PC', 'Warner Bros. Interactive Entertainment');
+(00000029, 'ACTION', 0, 'PC', 'Warner Bros Interactive Entertainment');
 
 insert into game values
 (00000030, 'RPG', 1, 'WII', 'Nintendo');
@@ -480,34 +480,34 @@ insert into sells values
 (44406113, 00000013, 1);
 
 insert into account values
-(00000001, 5, 'John Zee', '5775 Toronto Road, Vancouver, Canada', 7789966117);
+(00000001, 50, 'John Zee', '5775 Toronto Road, Vancouver, Canada', 7789966117);
 
 insert into account values
-(00000002, 10, 'Bread Pitt', '268 Flower Road, Vancouver, Canada', 6785421864);
+(00000002, 100, 'Bread Pitt', '268 Flower Road, Vancouver, Canada', 6785421864);
 
 insert into account values
-(00000003, 100, 'Tessa Moma', 'Sticker Road, Vancouver, Canada', 7782226666);
+(00000003, 1000, 'Tessa Moma', 'Sticker Road, Vancouver, Canada', 7782226666);
 
 insert into account values
-(00000004, 20, 'Olive Cube', '123 Alphabet Road, Seattle, US', 7642535221);
+(00000004, 200, 'Olive Cube', '123 Alphabet Road, Seattle, US', 7642535221);
 
 insert into account values
-(00000005, 25, 'Jeffery Roul', '1235 Key Road, Surrey, Canada', 3902931890);
+(00000005, 250, 'Jeffery Roul', '1235 Key Road, Surrey, Canada', 3902931890);
 
 insert into account values
-(00000006, 40, 'Dennis Birk','1446 Rushford Street, Richmond, Canada',7782938080);
+(00000006, 400, 'Dennis Birk','1446 Rushford Street, Richmond, Canada',7782938080);
 
 insert into account values
-(00000007, 20, 'Kenneth Jones', '1285 Mills Road, White Rock, Canada', 7789223222);
+(00000007, 200, 'Kenneth Jones', '1285 Mills Road, White Rock, Canada', 7789223222);
 
 insert into account values
-(00000008, 80, 'Laurel Starrett', '5353 Smolen Road, Richmond, Canada', 6049990321);
+(00000008, 800, 'Laurel Starrett', '5353 Smolen Road, Richmond, Canada', 6049990321);
 
 insert into account values
-(00000009, 10, 'George Chapman', '1727 Token Street, Vancouver, Canada', 6048976522);
+(00000009, 100, 'George Chapman', '1727 Token Street, Vancouver, Canada', 6048976522);
 
 insert into account values
-(00000010, 30, 'Eric Yen', '1433 Matthew Street, Vancouver, Canada', 7789022311);
+(00000010, 300, 'Eric Yen', '1433 Matthew Street, Vancouver, Canada', 7789022311);
 
 insert into Payment_Record values
 (00000001, 'Credit Card', 29.99, '02-FEB-2011');
