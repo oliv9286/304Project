@@ -170,7 +170,7 @@ Find the game genre with the
 	  }
       else if(isset($_POST['genresubmit'])) {
 	    if(isset($_GET['used'])) {
-  	        if(preg_match("/[A-Z  | a-z]+/", $_POST['genresearch'])){
+  	        if(preg_match("/^[a-zA-Z\s]+$/", $_POST['genresearch'])){
 
 				$genre=$_POST['genresearch'];
 				$sql = "select g.serial_number, i.pname, u.discount from Game g, used_game u, item i where g.serial_number = u.serial_number AND i.serial_number = g.serial_number AND UPPER(g.genre) = UPPER('".$genre."')";
