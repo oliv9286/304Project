@@ -116,50 +116,6 @@ points to Account ID
 <input type="submit" name="SubmitAddPoint" value="Add">
 </form>
 
-<?php
-	if($db_conn){
-		if(isset($_POST['SubmitAddPoint'])){
-			if(isset($_GET['name'])){
-			
-			$points = $_POST['addpoints'];
-			$account_ap = $_POST['AccountAddPoints'];
-			
-			
-			if(!=(strcmp($points, "Points"))==0){
-				if(preg_match("/[0-9]+/", $_POST['Points'])){
-					
-					$curr_point = "select A.Points
-									from Account A
-									where A.Account_ID = ".$account_ap."";
-					
-					$currpoint_result = executePlainSQL($curr_point);
-					
-					while ($row = OCI_Fetch_Array($cus_result,OCI_BOTH)){
-					$new_points = .$row['POINTS']. + $currpoint_result;
-					}
-					
-					//$new_points = $currpoint_result + $points;
-					
-					$set_point = "update Account 
-								  set Points = ".$new_points.";
-								  where Account_ID = ".$account_ap."";
-					
-					$parse_ap = OCIParse($db_conn, $set_point);
-					$execute_ap = OCIExecute($parse_ap, OCI_DEFAULT);
-					OCICommit($db_conn);
-					
-					$show_points = "select *
-									from Account
-									where Account_ID = ".$account_ap."";
-					$show_result = executePlainSQL($show_points);
-					
-				}else
-				echo "<br><font color='ff0000'>Input Type Incorrect! Points must be Integers</font><br>";
-			}else echo "<br><font color='ff0000'>Please Enter Points</font><br>";
-			}
-			}
-			}
-?>
 
 
 <form method="post" action="Employee.php?name">
@@ -599,6 +555,68 @@ Find the customers who have returned all consoles:
 	}
 
   ?>
+  
+  
+  
+<?php
+
+	if($db_conn){
+		if(isset($_POST['SubmitAddPoint'])){
+			if(isset($_GET['name'])){
+			
+			$points = $_POST['addpoints'];
+			$account_ap = $_POST['AccountAddPoints'];
+			
+			if(!(strcmp($account_ap, "AccountID"))==0){
+			if(preg_match("/[0-9]+/", $_POST['AccountAddPoints'])){
+			if(!(strcmp($points, "Points"))==0){
+				if(preg_match("/[0-9]+/", $_POST['addpoints'])){
+					
+					$curr_point = "select A.Points
+									from Account A
+									where A.Account_ID = ".$account_ap."";
+					
+					$currpoint_result = executePlainSQL($curr_point);
+					
+					while ($row = OCI_Fetch_Array($currpoint_result, OCI_BOTH)){
+					$update_points = $row['POINTS'];
+					}
+					
+					
+					$new_points = $update_points + $points;
+					
+					$set_point = "update Account 
+								  set Points = ".$new_points."
+								  where Account_ID = ".$account_ap."";
+					
+					$parse_ap = OCIParse($db_conn, $set_point);
+					$execute_ap = OCIExecute($parse_ap, OCI_DEFAULT);
+					OCICommit($db_conn);
+					
+					$show_points = "select *
+									from Account
+									where Account_ID = ".$account_ap."";
+					$show_result = executePlainSQL($show_points);
+					
+				echo "<br>Created New Account:<br>";
+	  			echo "<table>";
+	  			echo "<tr><th>AccountID</th><th>Points</th><th>Name</th><th>Address</th><th>Phone</th></tr>";
+
+	  			while ($row = OCI_Fetch_Array($show_result, OCI_BOTH)) {
+				echo "<tr><td>" . $row["ACCOUNT_ID"] . "</td><td>" . $row["POINTS"] . "</td><td>" . $row["ANAME"] . "</td><td>" . $row["AADDRESS"] . "</td><td>".$row["APHONE"]."</td></tr>";
+	  			}
+	  			echo "</table>";
+					
+				}else
+				echo "<br><font color='ff0000'>Input Type Incorrect! Points must be Integers</font><br>";
+			}else echo "<br><font color='ff0000'>Please Enter Points</font><br>";
+			}else echo "<br><font color='ff0000'>Input Type Incorrect! AccountID must be Numbers</font><br>";
+			}else echo "<br><font color='ff0000'>Please Enter Account ID </font><br>";
+			}
+			}
+			}
+
+?>
 
 </div>
 
