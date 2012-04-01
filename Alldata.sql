@@ -23,7 +23,7 @@ CREATE TABLE Item
 PName varchar(50),
 Price float,
 Quantity integer,
-Check (serial_number >= 0 AND price >= 0));
+Check (serial_number >= 0 AND price >= 0 AND quantity >= 0));
 
 create table Game
 (Serial_Number integer not null PRIMARY KEY,
