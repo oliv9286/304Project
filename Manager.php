@@ -361,10 +361,12 @@ All Hires --
  if($db_conn) {
       if(isset($_POST['salessubmit'])) {
 	    if(isset($_GET['employeesales'])) {
+		$name=$_POST['clerk'];
+		if (!(strcmp($name, "Employee name") == 0)) {
 	      if(preg_match("/^[A-Z  | a-z]+$/", $_POST['clerk'])){
-		    $name=$_POST['clerk'];
+		    
 		    echo "<br>".$clerk."<br>";
-		    $sql = "select e.EName, i.PName from Employee e, Sells s, Item i where e.Employee_ID = s.Employee_ID and s.Serial_Number = i.Serial_Number and e.EName ='".$name."'";
+		    $sql = "select e.EName, i.PName from Employee e, Sells s, Item i where e.Employee_ID = s.Employee_ID and s.Serial_Number = i.Serial_Number and UPPER(e.ename) LIKE UPPER('%".$name."%')";
 		    $result = executePlainSQL($sql);
 			printSalesResult($result);
 		    
@@ -372,6 +374,10 @@ All Hires --
 		 else {
 			echo "<p><br><font color='FF0000'>Input Incorrect! Employee Name Must Be Letters</font><br><p>";
 			}
+		}
+			else{
+				echo "<p><br><font color='FF0000'>No input</font><br><p>";
+				}
 	    }
 	  }
 	  else if(isset($_POST['accTranSubmit'])) {
@@ -397,7 +403,7 @@ All Hires --
 			 {
 				if(preg_match("/^[0-9a-zA-Z\s]+$/", $_POST['PName']))
 				{
-					if(preg_match("/^[0-9]+$/", $_POST['Price']))
+					if(preg_match("/^\d+(\.\d{2})?$/", $_POST['Price']))
 					{
 						if(preg_match("/^[0-9]+$/", $_POST['Quantity']))
 						{
@@ -420,17 +426,25 @@ All Hires --
 			
 								$sql = "INSERT INTO Item VALUES (".$sNum.", '".$pName."', ".$pr.", ".$quan.")";
 								$parsed = OCIParse($db_conn, $sql);
-								$sql2 =	"INSERT INTO Hardware values(".$sNum.", '".$hType."', '".$comp."')";
-								$parsed2 = OCIParse($db_conn, $sql2);
 								$r=OCIExecute($parsed, OCI_DEFAULT); 
-								$r2=OCIExecute($parsed2, OCI_DEFAULT); 
+								if ($r)
+								{
+									$sql2 =	"INSERT INTO Hardware values(".$sNum.", '".$hType."', '".$comp."')";
+									$parsed2 = OCIParse($db_conn, $sql2);
+								
+									$r2=OCIExecute($parsed2, OCI_DEFAULT); 
+									OCICommit($db_conn); 
+									$sql4 = "select * from Hardware i";
+									$result4 = executePlainSQL($sql4);
 			
-								OCICommit($db_conn); 
-								$sql4 = "select * from Hardware i";
-								$result4 = executePlainSQL($sql4);
-			
-								printInsertResult($r3);
-								printHardwareResult($result4);
+									printInsertResult($r3);
+									printHardwareResult($result4);
+								}
+								else
+								{
+									echo "<p><br><font color='FF0000'>Serial number already exist! </font><br><p>";
+								}
+								
 							}
 							
 							else {
@@ -474,7 +488,7 @@ All Hires --
 			 {
 				if(preg_match("/^[0-9a-zA-Z\s]+$/", $_POST['PName']))
 				{
-					if(preg_match("/^[0-9]+$/", $_POST['Price']))
+					if(preg_match("/^\d+(\.\d{2})?$/", $_POST['Price']))
 					{
 						if(preg_match("/^[0-9]+$/", $_POST['Quantity']))
 						{
@@ -503,7 +517,8 @@ All Hires --
 								$sql = "INSERT INTO Item VALUES (".$sNum.", '".$pName."', ".$pr.", ".$quan.")";
 								$parsed = OCIParse($db_conn, $sql);
 								$r=OCIExecute($parsed, OCI_DEFAULT); 
-			
+								if ($r)
+								{
 								//echo "<br>".$temp."<br>";
 								$sql2 =	"INSERT INTO Game values(".$sNum.", '".$gType."', '".$temp."', '".$pType."', '".$comp."')";
 								$parsed2 = OCIParse($db_conn, $sql2);
@@ -526,7 +541,10 @@ All Hires --
 			
 								//printInsertResult($r3);
 								printGameResult($result4);
-							
+								}
+								else {
+									echo "<p><br><font color='FF0000'>Serial Number already exist!</font><br><p>";
+									}
 							
 							}
 							 else {
@@ -574,7 +592,7 @@ All Hires --
 			 {
 				if(preg_match("/^[0-9a-zA-Z\s]+$/", $_POST['PName']))
 				{
-					if(preg_match("/^[0-9]+$/", $_POST['Price']))
+					if(preg_match("/^\d+(\.\d{2})?$/", $_POST['Price']))
 					{
 						if(preg_match("/^[0-9]+$/", $_POST['Discount']))
 						{
@@ -607,7 +625,9 @@ All Hires --
 								$sql = "INSERT INTO Item VALUES (".$sNum.", '".$pName."', ".$pr.", ".$quan.")";
 								$parsed = OCIParse($db_conn, $sql);
 								$r=OCIExecute($parsed, OCI_DEFAULT); 
-			
+								
+								if($r)
+								{
 								//echo "<br>".$temp."<br>";
 								$sql2 =	"INSERT INTO Game values(".$sNum.", '".$gType."', '".$temp."', '".$pType."', '".$comp."')";
 								$parsed2 = OCIParse($db_conn, $sql2);
@@ -630,7 +650,11 @@ All Hires --
 			
 								//printInsertResult($r3);
 								printUsedGameResult($result4);
-							
+								}
+								else
+								{
+									echo "<p><br><font color='FF0000'>Serial number already exist!</font><br><p>";
+								}
 							
 							}
 							 else {
@@ -736,7 +760,7 @@ All Hires --
 			}
 				
 			if (!(strcmp($price, "New_Price") == 0)) {	
-				if(preg_match("/^[0-9]+$/", $_POST['Price']))
+				if(preg_match("/^\d+(\.\d{2})?$/", $_POST['Price']))
 				{
 					$sql2 = "update Item set Price ='".$price."' where Serial_Number ='".$sNum."'";
 					$parsed2 = OCIParse($db_conn, $sql2);
