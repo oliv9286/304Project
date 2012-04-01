@@ -565,7 +565,7 @@ insert into Makes values
 (00000008, 00000008);
 
 insert into Makes values
-(00000009, 00000009);
+(00000008, 00000009);
 
 insert into Makes values
 (00000007, 00000010);
@@ -604,6 +604,9 @@ insert into Stores_Purchased values
 (00000009, 00000012);
 
 insert into Stores_Purchased values
+(00000009, 00000013);
+
+insert into Stores_Purchased values
 (00000010, 00000011);
 
 insert into Stores_Purchased values
@@ -632,6 +635,21 @@ insert into returns values
 
 insert into returns values
 (00000002, 00000002, '19-APR-2010');
+
+insert into returns values
+(00000006, 00000011, '20-JAN-2010');
+
+insert into returns values
+(00000006, 00000012, '05-APR-2011');
+
+insert into returns values
+(00000006, 00000013, '15-SEP-2010');
+
+insert into returns values
+(00000007, 00000011, '11-AUG-2012');
+
+insert into returns values
+(00000007, 00000012, '20-FEB-2010');
 
 insert into modifies values
 (44406106, 00000007, '01-FEB-2011');
