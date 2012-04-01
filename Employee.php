@@ -326,7 +326,7 @@ Find the customers who have returned all consoles:
     		} 
     		
     		if(!(strcmp($eaddress, "New Address")==0)){
-    			if(preg_match("/[A-Z | a-z | 0-9 ]+/", $_POST['EAddress'])){
+    			if(preg_match("/^[0-9a-zA-Z\s,.]+$/", $_POST['EAddress'])){
     			$ud_address = "UPDATE Employee
     						   SET EAddress = '".$eaddress."'
     						   WHERE Employee_ID = '".$eid."'";
@@ -438,7 +438,7 @@ Find the customers who have returned all consoles:
     			if(!(strcmp($aname, "Name")==0)){
     			if(preg_match("/^[a-zA-Z\s]+$/",$_POST['AName'])){
     				if(preg_match("/^[0-9]+$/", $_POST['APhone'])){
-    					if(preg_match("/[0-9|a-z|A-Z]+/", $_POST['AAddress'])){
+    					if(preg_match("/^[0-9a-zA-Z\s,.]+$/", $_POST['AAddress'])){
     			
     			$ac_name = "insert into account values
 							(".$aid.", 0, '".$aname."', '".$aaddress."', ".$aphone.")";
@@ -453,7 +453,30 @@ Find the customers who have returned all consoles:
 							
 				$parse_create = OCIParse($db_conn, $creates);
 				$result_creates = OCIExecute($parse_create, OCI_DEFAULT);
+				
+				if($result_creates){
 				OCICommit($db_conn);
+				
+				$new_acc = "SELECT *
+    					 FROM Account
+    					 ";
+    			$result_acc = executePlainSQL($new_acc);
+    		
+    	//prints modified employee info
+	  			echo "<br>Created New Account:<br>";
+	  			echo "<table>";
+	  			echo "<tr><th>AccountID</th><th>Points</th><th>Name</th><th>Address</th><th>Phone</th></tr>";
+
+	  			while ($row = OCI_Fetch_Array($result_acc, OCI_BOTH)) {
+				echo "<tr><td>" . $row["ACCOUNT_ID"] . "</td><td>" . $row["POINTS"] . "</td><td>" . $row["ANAME"] . "</td><td>" . $row["AADDRESS"] . "</td><td>".$row["APHONE"]."</td></tr>";
+	  			}
+	  			echo "</table>";
+				}
+				
+				else{
+				echo "<br><font color='ff0000'> Account ID Already Exists</font><br>";
+				
+				}
 				
     			
     			}else
@@ -469,20 +492,7 @@ Find the customers who have returned all consoles:
     			
     		
     			
-    			$new_acc = "SELECT *
-    					 FROM Account
-    					 WHERE Account_ID = ".$aid."";
-    			$result_acc = executePlainSQL($new_acc);
-    		
-    	//prints modified employee info
-	  echo "<br>Created New Account:<br>";
-	  echo "<table>";
-	  echo "<tr><th>AccountID</th><th>Points</th><th>Name</th><th>Address</th><th>Phone</th></tr>";
-
-	  while ($row = OCI_Fetch_Array($result_acc, OCI_BOTH)) {
-		echo "<tr><td>" . $row["ACCOUNT_ID"] . "</td><td>" . $row["POINTS"] . "</td><td>" . $row["ANAME"] . "</td><td>" . $row["AADDRESS"] . "</td><td>".$row["APHONE"]."</td></tr>";
-	  }
-	  echo "</table>";
+    			
     
     }
     	else	echo  "<br><br><font color='ff0000'>Please Enter Employee ID and AccountID</font><br>";	
