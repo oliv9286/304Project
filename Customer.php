@@ -79,12 +79,98 @@ View returns for this account
 	<input type="submit" name="find" value="Go!"/>
 </form>
 
-<form method="post" action="Customer.php?name">
-Delete returns for this account
-	<input type="text" name="delete" value="Account ID"/>
-	<input type="submit" name="deleter" value="Go!"/>
+<form method="post" action="Customer.php?name" >
+Buy an item using this account 
+	<input type="text" name="buyer" value="Account ID"/>
+	<input type="text" name="item" value="Serial Number"/>
+	<input type="text" name="paymethod" value="Payment Method"/>
+	<input type="submit" name="buy" value="Buy!"/>
 </form>
     
+
+ <?php
+	
+	
+    if($db_conn) {
+      if(isset($_POST['buy'])) {
+	    if(isset($_GET['name'])) {
+	      if(preg_match("/^[0-9]+$/", $_POST['buyer'])){
+		      if (preg_match("/^[0-9]+$/", $_POST['item'])){
+		      if (preg_match("/^[a-zA-Z\s]+$/", $_POST['paymethod'])){
+			      
+		    $buyer=$_POST['buyer'];
+		    $item=$_POST['item'];
+		    $paymethod=$_POST['paymethod'];
+		    
+		    echo "<br>".$buyer."<br>";
+		  
+		    $sqlmax = "select max(sale_number) from stores_purchased";
+    		$resultmax = executePlainSQL($sqlmax);
+    		$rowmax = OCI_Fetch_Array($resultmax, OCI_BOTH);
+    		$sales = $rowmax["MAX(SALE_NUMBER)"];
+    		$sales = $resultmax + 1; //new sale number
+    		
+    		$quan = "select quantity from item where serial_number = ".$item."";
+    		$resultquan = executePlainSQL($quan);
+    		$rowquan = OCI_Fetch_Array($resultquan, OCI_BOTH);
+    		$quandec = $rowquan["QUANTITY"];
+    		$quandec = $resultquan - 1; //new item quantity
+    		
+    		$dec = "update item set quantity ='".$quandec."' where serial_number =".$item."";
+		    $parseddec = OCIParse($db_conn, $dec);
+		    $resultdec=OCIExecute($parseddec, OCI_DEFAULT);
+    		
+		    $price = "select price from item where serial_number = ".$item."";
+		    $resultprice = executePlainSQL($price);
+    		$rowprice = OCI_Fetch_Array($resultprice, OCI_BOTH);
+    		$total = $rowprice["PRICE"]; // total price
+            
+    		$today =  date("d-M-Y"); //today's date
+    		
+    		$prinsert = "insert into Payment_Record values (".$sales.", '".$paymethod."', ".$total.", '".$today."')";
+		    $parsedpr = OCIParse($db_conn, $prinsert);
+		    $resultpr=OCIExecute($parsedpr, OCI_DEFAULT);
+		    
+		    $minsert = "insert into makes values (".$buyer.", ".$sales.")";
+		    $parsedm = OCIParse($db_conn, $minsert);
+		    $resultm=OCIExecute($parsedm, OCI_DEFAULT);
+		    
+		    $spinsert = "insert into stores_purchased values (".$sales.", ".$item.")";
+		    $parsedsp = OCIParse($db_conn, $spinsert);
+		    $resultsp=OCIExecute($parsedsp, OCI_DEFAULT);
+		    
+		    OCICommit($db_conn);
+		    
+		    $sqlbuy = "select m.account_id, m.sale_number, s.serial_number from makes m, stores_purchased s where m.account_id =".$buyer."";	    
+		    $resultbuy = executePlainSQL($sqlbuy);
+		    
+			    //prints results from a select statement
+	  echo "<br>Got data from tables Makes and Payment Record:<br>";
+	  echo "<table>";
+	  echo "<tr><th>Account ID</th><th>Sale Number</th><th>Serial Number</th></tr>";
+
+	  while ($row = OCI_Fetch_Array($resultbuy, OCI_BOTH)) {
+		echo "<tr><td>" . $row["ACCOUNT_ID"] . "</td><td>" . $row["SALE_NUMBER"] . "</td><td>" . $row["SERIAL_NUMBER"] . "</td><td>"; //or just use "echo $row[0]" 
+	  }
+	  echo "</table>";
+    
+		    
+		  } else
+		  echo "<br><font color='FF0000'>Input not of correct type!  Please input letters only.</font><br>";
+	    } else
+	    echo "<br><font color='FF0000'>Input not of correct type!  Please input numbers only.</font><br>";
+	  } else
+	  echo "<br><font color='FF0000'>Input not of correct type!  Please input numbers only.</font><br>";
+	}
+	else {
+	  echo "<p>Please enter an account ID.</p>";
+	}
+}
+}
+
+   ?>
+   
+   
 <?php
 	
 	
@@ -292,45 +378,7 @@ Delete returns for this account
 
   ?>
   
-  <?php
-	
-	
-    if($db_conn) {
-      if(isset($_POST['deleter'])) {
-	    if(isset($_GET['name'])) {
-	      if(preg_match("/^[0-9]+$/", $_POST['delete'])){
-		    $accountd=$_POST['delete'];
-		    echo "<br>".$accountd."<br>";
-		  
-		    $sqld = "delete returns where account_id = ".$accountd." ";
-		    $parsedd = OCIParse($db_conn, $sqld);
-		    $resultd=OCIExecute($parsedd, OCI_DEFAULT);
-		    OCICommit($db_conn);
-		    
-		    $sqlpd = "select * from returns";	    
-		    $resultpd = executePlainSQL($sqlpd);
-		    
-			    //prints results from a select statement
-	  echo "<br>Got data from table Returns:<br>";
-	  echo "<table>";
-	  echo "<tr><th>Account ID</th><th>Serial Number</th><th>Return Date</th></tr>";
 
-	  while ($row = OCI_Fetch_Array($resultpd, OCI_BOTH)) {
-		echo "<tr><td>" . $row["ACCOUNT_ID"] . "</td><td>" . $row["SERIAL_NUMBER"] . "</td><td>" . $row["RETURN_DATE"] . "</td><td>"; //or just use "echo $row[0]" 
-	  }
-	  echo "</table>";
-    
-		    
-		  } else
-		  echo "<br><font color='FF0000'>Input not of correct type!  Please input numbers only.</font><br>";
-	    }
-	  }
-	}
-	else {
-	  echo "<p>Please enter an account ID.</p>";
-	}
-
-  ?>
   
 </br></br></br></br></br>
 
