@@ -63,9 +63,9 @@
 Find the
 <select name="aggregation">
 <option value="Cheapest">Cheapest</option>
-<option value="Most_Expensive">Most Expensive</option>
+<option value="Most Expensive">Most Expensive</option>
 <option value="Average of all">Average Price Of All</option>
-</select> Item(s)
+</select> Item(s) (before discount)
 <input type="submit" name ="aggregationsubmit" value="Go!"/>
 </form>
 
@@ -74,7 +74,7 @@ Find the platform with the
 <select name="platformaggregation">
 <option value="Most">Most</option>
 <option value="Least">Least</option>
-</select> games.
+</select> unique games.
 <input type="submit" name="platformaggregationsubmit" value="Go!"/>
 </form>
 
@@ -83,21 +83,30 @@ Find the game genre with the
 <select name="genreaggregation">
 <option value="Highest">Highest</option>
 <option value="Lowest">Lowest</option>
-</select> average price.
+</select> average price of the new games
 <input type="submit" name="genreaggregationsubmit" value="Go!"/>
 </form>
 
 </br>
-
+<table>
+<tr><td>
+<form method="post" action="index.php?allgames" id="allgames">
+<input type="submit" name="AllGamesSubmit" value="All Games"/>
+</form>
+</td><td>
 <form method="post" action="index.php?newgames" id="newgames">
 <input type="submit" name="NewGameSubmit" value="New Games"/> 
-</form>    
+</form>  
+</td><td> 
 <form method="post" action="index.php?usedgames" id="usedgames">
 <input type="submit" name="UsedGameSubmit" value="Used Games"/>
 </form>
+</td><td>
 <form method="post" action="index.php?hardware" id="hardware">
 <input type="submit" name="HardwareSubmit" value="Hardware"/>
 </form>
+</td></tr>
+</table>
 
   <?php
 	
@@ -199,7 +208,7 @@ Find the game genre with the
 				echo "</table>";	
 		
 			}
-			else if ( strcmp ( $option , "Most_Expensive" ) == 0 ) {
+			else if ( strcmp ( $option , "Most Expensive" ) == 0 ) {
 				$sql = "select Pname, price from item where price = (select MAX(price) from Item)";		
 				$result = executePlainSQL($sql);
 
@@ -236,8 +245,9 @@ Find the game genre with the
 	    if(isset($_GET['platformaggregation'])) {
 			$option=$_POST['platformaggregation'];
 			$sqlcreateview = "create view PlatformCount (platform, gameCount) as 
-							select g.platform, count(*) as gameCount
-							from game g
+							select g.platform, count(DISTINCT(i.pname)) as gameCount
+							from game g, item i
+							where g.serial_number = i.serial_number
 							group by g.platform";
 			$viewresult = executePlainSQL($sqlcreateview);			
 
@@ -299,8 +309,8 @@ Find the game genre with the
 
 			$sqlview = "create view GenreAverage (genre, average) as
 						select g.genre, avg(i.price) as average
-						from game g, item i
-						where g.serial_number = i.serial_number
+						from game g, item i, new_game n
+						where g.serial_number = i.serial_number AND g.serial_number = n.serial_number
 						group by g.genre
 						having count(*) >= 1";
 			$viewresult = executePlainSQL($sqlview);
@@ -354,7 +364,19 @@ Find the game genre with the
 		}
 	  }
 
-
+      else if(isset($_POST['AllGamesSubmit'])) {
+	    if(isset($_GET['allgames'])) {
+			$sql = "select i.pname, g.genre, g.platform, i.price from Game g, Item i where g.serial_number=i.serial_number";
+			$result = executePlainSQL($sql);
+			echo "<br>All Games</br>";
+			echo "<table>";
+			echo "<tr><th>Game</th><th>Genre</th><th>Platform</th><th>Price</th></tr>";
+			while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
+				echo "<tr><td>" . $row["PNAME"] . "</td><td>" . $row["GENRE"] . "</td><td>" . $row["PLATFORM"] . "</td><td>" . $row["PRICE"] . "</td></tr>"; //or just use "echo $row[0]" 
+			}
+			echo "</table>";	
+		}
+	  }	
       else if(isset($_POST['NewGameSubmit'])) {
 	    if(isset($_GET['newgames'])) {
 			$sql = "select i.pname, g.genre, g.platform, i.price from New_Game n, Game g, Item i where n.serial_number=g.serial_number AND n.serial_number = i.serial_number";
