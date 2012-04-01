@@ -87,7 +87,7 @@ Find the game genre with the
 <input type="submit" name="genreaggregationsubmit" value="Go!"/>
 </form>
 
-</br></br></br>
+</br>
 
 <form method="post" action="index.php?newgames" id="newgames">
 <input type="submit" name="NewGameSubmit" value="New Games"/> 
