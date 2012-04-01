@@ -7,7 +7,7 @@
 <div class="pos">
 <?php
     $success = true;
-	$db_conn = OCILogon("ora_x0g7", "a61449088", "ug");
+	$db_conn = OCILogon("ora_m4s7", "a44406106", "ug");
 	
 	function executePlainSQL($cmdstr) { //takes a plain (no bound variables) SQL command and executes it
 	//echo "<br>running ".$cmdstr."<br>";
@@ -123,7 +123,7 @@ Find the game genre with the
 	    if(isset($_GET['name'])) {
 	      if(preg_match("/^[0-9a-zA-Z\s]+$/", $_POST['namesearch'])){
 		    $name=$_POST['namesearch'];
-		    echo "<br>".$name."<br>";
+		    echo "<br> Search Item:".$name."<br>";
 		  
 		    $sql = "select i.pname, i.price, i.quantity from item i where UPPER(i.pname) LIKE UPPER('%".$name."%')";
 		    $result = executePlainSQL($sql);
@@ -198,7 +198,7 @@ Find the game genre with the
       else if(isset($_POST['aggregationsubmit'])) {
 	    if(isset($_GET['aggregation'])) {
 		    $option=$_POST['aggregation'];
-		    echo "<br>".$option."<br>";
+		    echo "<br> Find the ".$option."<br>";
 			$sql = "";
 			if ( strcmp ( $option , "Cheapest" ) == 0) {
 				$sql = "select Pname, price from item where price = (select MIN(price) from Item)";		
