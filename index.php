@@ -74,7 +74,7 @@ Find the platform with the
 <select name="platformaggregation">
 <option value="Most">Most</option>
 <option value="Least">Least</option>
-</select> unique games.
+</select> distinct games.
 <input type="submit" name="platformaggregationsubmit" value="Go!"/>
 </form>
 
@@ -287,7 +287,7 @@ Find the game genre with the
 		
 				$result = executePlainSQL($sql);
 				
-				echo "<br>Platform with least Games</br>";
+				echo "<br>Platform with Least Games</br>";
 
 
 
