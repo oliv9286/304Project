@@ -108,6 +108,11 @@ Find the game genre with the
 </td></tr>
 </table>
 
+<form method="post" action="index.php?testing" id="testing">
+<input type="submit" name="TestingSubmit" value="Testing"/>
+</form>
+
+
   <?php
 	
 	
@@ -417,7 +422,27 @@ Find the game genre with the
 			}
 			echo "</table>";	
 		}
-	  }	  
+	  }	
+
+	  else if (isset($_POST['TestingSubmit'])) {
+			if(isset($_GET['testing'])) {
+				$sql = "select max(sale_number) from stores_purchased";
+				$result = executePlainSQL($sql);
+				$row = OCI_Fetch_Array($result, OCI_BOTH);
+				$sales = $row["MAX(SALE_NUMBER)"];
+				$sales = $sales +1;
+				echo "<br>Sales".$sales."</br>";
+				
+				$today =  date("d-M-Y");
+				echo "<br>".$today."</br>";
+
+				$sales = $sales +1;
+				echo "<br>Sales".$sales."</br>";
+
+			}
+	  }
+	  
+	  
 	  
 	  else {
 	  }		
