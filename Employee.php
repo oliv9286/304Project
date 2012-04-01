@@ -15,7 +15,7 @@
 
 <?php
    $success = true;
-    $db_conn = OCILogon("ora_u5o7", "a35307099", "ug");
+    $db_conn = OCILogon("ora_m4s7", "a44406106", "ug");
     
     function executePlainSQL($cmdstr) { //takes a plain (no bound variables) SQL command and executes it
     //echo "<br>running ".$cmdstr."<br>";
@@ -82,77 +82,11 @@ Create New Account:<br>
 <input type="submit" name="add" value="Add">
 </form>
 
-<?php
-	    if($db_conn) {
-    	if(isset($_POST['add'])){
-    		if(isset($_GET['name'])){
-    		if(preg_match("/^[0-9]+$/",$_POST['CEmployeeID']) AND preg_match("/^[0-9]+$/",$_POST['AccountID'])){
-    		
-    			$cid=$_POST['CEmployeeID'];
-    			$aid=$_POST['AccountID'];
-    			$aname=$_POST['AName'];
-    			$aphone=$_POST['APhone'];
-    			$aaddress=$_POST['AAddress'];
-    			
-    			echo "<br> AccountID: ".$aid." added by EmployeeID: ".$cid. "<br>";
-    			
-    			if(!(strcmp($aname, "Name")==0)){
-    			if(preg_match("/^[a-zA-Z\s]+$/",$_POST['AName'])){
-    				if(preg_match("/^[0-9]+$/", $_POST['APhone'])){
-    					if(preg_match("/[0-9|a-z|A-Z]+/", $_POST['AAddress'])){
-    			
-    			$ac_name = "insert into account values
-							(".$aid.", 0, '".$aname."', '".$aaddress."', ".$aphone.")";
-				
-				
-				
-				$parse_add = OCIParse($db_conn, $ac_name);
-				$result_add = OCIExecute($parse_add, OCI_DEFAULT);
-				
-				$creates = "insert into creates values
-							(".$cid.", ".$aid.")";
-							
-				$parse_create = OCIParse($db_conn, $creates);
-				$result_creates = OCIExecute($parse_create, OCI_DEFAULT);
-				OCICommit($db_conn);
-				
-    			
-    			}else
-    				echo "<br><font color='ff0000'> Input Type Incorrect! Address Must Be Letters and Numbers</font><br>";
-    			}else
-    				echo "<br><font color='ff0000'>Input Type Incorrect! Phone Must Be Numbers</font><br>";
-    			}
-    			else
-    			echo "<br><font color='FF0000'>Input Type Incorrect! Name Must Be Letters</font><br>";
-    			}
-    			else
-    			echo "<br><font color='FF0000'>Pleae Enter Name for the Account</font><br>";
-    			
-    		
-    			
-    			$new_acc = "SELECT *
-    					 FROM Account
-    					 WHERE Account_ID = ".$aid."";
-    			$result_acc = executePlainSQL($new_acc);
-    		
-    	//prints modified employee info
-	  echo "<br>Created New Account:<br>";
-	  echo "<table>";
-	  echo "<tr><th>AccountID</th><th>Points</th><th>Name</th><th>Address</th><th>Phone</th></tr>";
-
-	  while ($row = OCI_Fetch_Array($result_acc, OCI_BOTH)) {
-		echo "<tr><td>" . $row["ACCOUNT_ID"] . "</td><td>" . $row["POINTS"] . "</td><td>" . $row["ANAME"] . "</td><td>" . $row["AADDRESS"] . "</td><td>".$row["APHONE"]."</td></tr>";
-	  }
-	  echo "</table>";
-    
-    }
-    	else	echo  "<br><br><font color='ff0000'>Please Enter Employee ID and AccountID</font><br>";	
-	 }  
-
-} 
-}
-	
-?>
+<form method="post" action="Employee.php?name">
+Delete returns for this account 
+<input type="text" name="delete" value="Account ID">
+<input type="submit" name ="deleter" value="Delete">
+</form>
 
 
 <form method ="post" action="Employee.php?name">
@@ -171,27 +105,31 @@ Find the sum of all purchases from store <input type="submit" name="go" value="G
 
 </form>
 
+
 <form method="post" action="Employee.php?name">
 Find the customers who have purchased all consoles:
 <input type="submit" name="find" value="Find">
 </form>
-
+<br>
+<table>
+<tr><td>
 <form method="post" action="Employee.php?name">
 
 <input type="submit" name="new_game" value="New Games">
 
 </form>
-
+</td><td>
 <form method="post" action="Employee.php?name">
 
 <input type="submit" name="usedgame" value="Used Games">
 
 </form>
-
+</td><td>
 <form method="post" action="Employee.php?name">
 <input type="submit" name="hardware" value="Hardwares" >
 </form>
-
+</td></tr>
+</table>
 
 
 
@@ -432,7 +370,118 @@ Find the customers who have purchased all consoles:
 	}
 ?>
 
+<?php
+	    if($db_conn) {
+    	if(isset($_POST['add'])){
+    		if(isset($_GET['name'])){
+    		if(preg_match("/^[0-9]+$/",$_POST['CEmployeeID']) AND preg_match("/^[0-9]+$/",$_POST['AccountID'])){
+    		
+    			$cid=$_POST['CEmployeeID'];
+    			$aid=$_POST['AccountID'];
+    			$aname=$_POST['AName'];
+    			$aphone=$_POST['APhone'];
+    			$aaddress=$_POST['AAddress'];
+    			
+    			echo "<br> AccountID: ".$aid." added by EmployeeID: ".$cid. "<br>";
+    			
+    			if(!(strcmp($aname, "Name")==0)){
+    			if(preg_match("/^[a-zA-Z\s]+$/",$_POST['AName'])){
+    				if(preg_match("/^[0-9]+$/", $_POST['APhone'])){
+    					if(preg_match("/[0-9|a-z|A-Z]+/", $_POST['AAddress'])){
+    			
+    			$ac_name = "insert into account values
+							(".$aid.", 0, '".$aname."', '".$aaddress."', ".$aphone.")";
+				
+				
+				
+				$parse_add = OCIParse($db_conn, $ac_name);
+				$result_add = OCIExecute($parse_add, OCI_DEFAULT);
+				
+				$creates = "insert into creates values
+							(".$cid.", ".$aid.")";
+							
+				$parse_create = OCIParse($db_conn, $creates);
+				$result_creates = OCIExecute($parse_create, OCI_DEFAULT);
+				OCICommit($db_conn);
+				
+    			
+    			}else
+    				echo "<br><font color='ff0000'> Input Type Incorrect! Address Must Be Letters and Numbers</font><br>";
+    			}else
+    				echo "<br><font color='ff0000'>Input Type Incorrect! Phone Must Be Numbers</font><br>";
+    			}
+    			else
+    			echo "<br><font color='FF0000'>Input Type Incorrect! Name Must Be Letters</font><br>";
+    			}
+    			else
+    			echo "<br><font color='FF0000'>Pleae Enter Name for the Account</font><br>";
+    			
+    		
+    			
+    			$new_acc = "SELECT *
+    					 FROM Account
+    					 WHERE Account_ID = ".$aid."";
+    			$result_acc = executePlainSQL($new_acc);
+    		
+    	//prints modified employee info
+	  echo "<br>Created New Account:<br>";
+	  echo "<table>";
+	  echo "<tr><th>AccountID</th><th>Points</th><th>Name</th><th>Address</th><th>Phone</th></tr>";
 
+	  while ($row = OCI_Fetch_Array($result_acc, OCI_BOTH)) {
+		echo "<tr><td>" . $row["ACCOUNT_ID"] . "</td><td>" . $row["POINTS"] . "</td><td>" . $row["ANAME"] . "</td><td>" . $row["AADDRESS"] . "</td><td>".$row["APHONE"]."</td></tr>";
+	  }
+	  echo "</table>";
+    
+    }
+    	else	echo  "<br><br><font color='ff0000'>Please Enter Employee ID and AccountID</font><br>";	
+	 }  
+
+} 
+}
+	
+?>
+
+
+  <?php
+	
+	
+    if($db_conn) {
+      if(isset($_POST['deleter'])) {
+	    if(isset($_GET['name'])) {
+	      if(preg_match("/[0-9]+/", $_POST['delete'])){
+		    $accountd=$_POST['delete'];
+		    echo "<br> Delete returns for Account ID: ".$accountd."<br>";
+		  
+		    $sqld = "delete returns where account_id = ".$accountd." ";
+		    $parsedd = OCIParse($db_conn, $sqld);
+		    $resultd=OCIExecute($parsedd, OCI_DEFAULT);
+		    OCICommit($db_conn);
+		    
+		    $sqlpd = "select * from returns";	    
+		    $resultpd = executePlainSQL($sqlpd);
+		    
+			    //prints results from a select statement
+	  echo "<br>Got data from table Returns:<br>";
+	  echo "<table>";
+	  echo "<tr><th>Account ID</th><th>Serial Number</th><th>Return Date</th></tr>";
+
+	  while ($row = OCI_Fetch_Array($resultpd, OCI_BOTH)) {
+		echo "<tr><td>" . $row["ACCOUNT_ID"] . "</td><td>" . $row["SERIAL_NUMBER"] . "</td><td>" . $row["RETURN_DATE"] . "</td><td>"; //or just use "echo $row[0]" 
+	  }
+	  echo "</table>";
+    
+		    
+		  } else
+		  echo "<br><font color='FF0000'>Input Type Incorrect! AccountID Must Be Numbers</font><br>";
+	    }
+	  }
+	}
+	else {
+	  echo "<p>Please enter an account ID.</p>";
+	}
+
+  ?>
 </div>
 
 

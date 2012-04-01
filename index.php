@@ -369,13 +369,13 @@ Find the game genre with the
 
       else if(isset($_POST['AllGamesSubmit'])) {
 	    if(isset($_GET['allgames'])) {
-			$sql = "select i.pname, g.genre, g.platform, i.price from Game g, Item i where g.serial_number=i.serial_number";
+			$sql = "select i.pname, g.genre, g.platform, i.price, i.Quantity from Game g, Item i where g.serial_number=i.serial_number";
 			$result = executePlainSQL($sql);
 			echo "<br>All Games</br>";
 			echo "<table>";
-			echo "<tr><th>Game</th><th>Genre</th><th>Platform</th><th>Price</th></tr>";
+			echo "<tr><th>Game</th><th>Genre</th><th>Platform</th><th>Price</th><th>Quantity</th></tr>";
 			while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
-				echo "<tr><td>" . $row["PNAME"] . "</td><td>" . $row["GENRE"] . "</td><td>" . $row["PLATFORM"] . "</td><td>" . $row["PRICE"] . "</td></tr>"; //or just use "echo $row[0]" 
+				echo "<tr><td>" . $row["PNAME"] . "</td><td>" . $row["GENRE"] . "</td><td>" . $row["PLATFORM"] . "</td><td>" . $row["PRICE"] . "</td><td>" . $row["QUANTITY"] . "</td></tr>"; //or just use "echo $row[0]" 
 			}
 			echo "</table>";	
 		}
