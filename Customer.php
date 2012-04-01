@@ -104,27 +104,27 @@ Buy an item using this account
 		    
 		    echo "<br>".$buyer."<br>";
 		  
-		    $sqlmax = "select max(sale_number) from stores_purchased";
+		    $sqlmax = "select max(sale_number) from payment_record";
     		$resultmax = executePlainSQL($sqlmax);
     		$rowmax = OCI_Fetch_Array($resultmax, OCI_BOTH);
-    		$sales = $rowmax["MAX(SALE_NUMBER)"];
-    		$sales = $resultmax + 1; //new sale number
-    		
+    		$salesb = $rowmax["MAX(SALE_NUMBER)"];
+    		$sales = $salesb + 1; //new sale number
+    		  
     		$quan = "select quantity from item where serial_number = ".$item."";
     		$resultquan = executePlainSQL($quan);
     		$rowquan = OCI_Fetch_Array($resultquan, OCI_BOTH);
-    		$quandec = $rowquan["QUANTITY"];
-    		$quandec = $resultquan - 1; //new item quantity
-    		
+    		$quandecb = $rowquan["QUANTITY"];
+    		$quandec = $quandecb - 1; //new item quantity
+    		 
     		$dec = "update item set quantity ='".$quandec."' where serial_number =".$item."";
 		    $parseddec = OCIParse($db_conn, $dec);
-		    $resultdec=OCIExecute($parseddec, OCI_DEFAULT);
-    		
+		    $resultdec=OCIExecute($parseddec, OCI_DEFAULT); 
+		     
 		    $price = "select price from item where serial_number = ".$item."";
 		    $resultprice = executePlainSQL($price);
     		$rowprice = OCI_Fetch_Array($resultprice, OCI_BOTH);
     		$total = $rowprice["PRICE"]; // total price
-            
+    		 
     		$today =  date("d-M-Y"); //today's date
     		
     		$prinsert = "insert into Payment_Record values (".$sales.", '".$paymethod."', ".$total.", '".$today."')";
@@ -141,7 +141,7 @@ Buy an item using this account
 		    
 		    OCICommit($db_conn);
 		    
-		    $sqlbuy = "select m.account_id, m.sale_number, s.serial_number from makes m, stores_purchased s where m.account_id =".$buyer."";	    
+		    $sqlbuy = "select m.account_id, m.sale_number, s.serial_number from makes m, stores_purchased s where m.account_id =".$buyer." AND m.sale_number = s.sale_number";	    
 		    $resultbuy = executePlainSQL($sqlbuy);
 		    
 			    //prints results from a select statement
