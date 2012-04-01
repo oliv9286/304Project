@@ -809,26 +809,26 @@ All Clerks --
 	  
 	        else if(isset($_POST['AllGamesSubmit'])) {
 			if(isset($_GET['viewallgames'])) {
-				$sql = "select i.pname, g.genre, g.platform, i.price from Game g, Item i where g.serial_number=i.serial_number";
+				$sql = "select i.pname, g.genre, g.platform, i.price, i.quantity from Game g, Item i where g.serial_number=i.serial_number";
 				$result = executePlainSQL($sql);
 				echo "<br>All Games</br>";
 				echo "<table>";
-				echo "<tr><th>Game</th><th>Genre</th><th>Platform</th><th>Price</th></tr>";
+				echo "<tr><th>Game</th><th>Genre</th><th>Platform</th><th>Price</th><th>Quantity</th></tr>";
 				while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
-				echo "<tr><td>" . $row["PNAME"] . "</td><td>" . $row["GENRE"] . "</td><td>" . $row["PLATFORM"] . "</td><td>" . $row["PRICE"] . "</td></tr>"; //or just use "echo $row[0]"
+				echo "<tr><td>" . $row["PNAME"] . "</td><td>" . $row["GENRE"] . "</td><td>" . $row["PLATFORM"] . "</td><td>" . $row["PRICE"] . "</td><td>" . $row["QUANTITY"] . "</td></tr>"; //or just use "echo $row[0]"
 			}
 			echo "</table>";
 		}
 		} 
 		 else if(isset($_POST['NewGameSubmit'])) {
 		if(isset($_GET['viewnewgames'])) {
-			$sql = "select i.pname, g.genre, g.platform, i.price from New_Game n, Game g, Item i where n.serial_number=g.serial_number AND n.serial_number = i.serial_number";
+			$sql = "select i.pname, g.genre, g.platform, i.price, i.quantity from New_Game n, Game g, Item i where n.serial_number=g.serial_number AND n.serial_number = i.serial_number";
 			$result = executePlainSQL($sql);
 			echo "<br>New Games</br>";
 			echo "<table>";
-			echo "<tr><th>Game</th><th>Genre</th><th>Platform</th><th>Price</th></tr>";
+			echo "<tr><th>Game</th><th>Genre</th><th>Platform</th><th>Price</th><th>Quantity</th></tr>";
 			while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
-				echo "<tr><td>" . $row["PNAME"] . "</td><td>" . $row["GENRE"] . "</td><td>" . $row["PLATFORM"] . "</td><td>" . $row["PRICE"] . "</td></tr>"; //or just use "echo $row[0]"
+				echo "<tr><td>" . $row["PNAME"] . "</td><td>" . $row["GENRE"] . "</td><td>" . $row["PLATFORM"] . "</td><td>" . $row["PRICE"] . "</td><td>" . $row["QUANTITY"] . "</td></tr>"; //or just use "echo $row[0]"
 			}
 			echo "</table>";
 		}
@@ -836,13 +836,13 @@ All Clerks --
 	
 	      else if(isset($_POST['UsedGameSubmit'])) {
 			if(isset($_GET['viewusedgames'])) {
-			$sql = "select i.pname, g.genre, g.platform, i.price, u.discount from Used_Game u, Game g, Item i where u.serial_number=g.serial_number AND u.serial_number = i.serial_number";
+			$sql = "select i.pname, g.genre, g.platform, i.price, i.quantity, u.discount from Used_Game u, Game g, Item i where u.serial_number=g.serial_number AND u.serial_number = i.serial_number";
 			$result = executePlainSQL($sql);
 			echo "<br>Used Games</br>";
 			echo "<table>";
-			echo "<tr><th>Game</th><th>Genre</th><th>Platform</th><th>Price</th><th>Discount</th></tr>";
+			echo "<tr><th>Game</th><th>Genre</th><th>Platform</th><th>Price</th><th>Quantity</th><th>Discount</th></tr>";
 			while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
-				echo "<tr><td>" . $row["PNAME"] . "</td><td>" . $row["GENRE"] . "</td><td>" . $row["PLATFORM"] . "</td><td>" . $row["PRICE"] . "</td><td>" . $row["DISCOUNT"] . "</td></tr>"; //or just use "echo $row[0]"
+				echo "<tr><td>" . $row["PNAME"] . "</td><td>" . $row["GENRE"] . "</td><td>" . $row["PLATFORM"] . "</td><td>" . $row["PRICE"] . "</td><td>" . $row["QUANTITY"] . "</td><td>" . $row["DISCOUNT"] . "</td></tr>"; //or just use "echo $row[0]"
 			}
 			echo "</table>";
 		}
@@ -850,13 +850,13 @@ All Clerks --
 	
 	      else if(isset($_POST['HardwareSubmit'])) {
 			if(isset($_GET['viewhardware'])) {
-			$sql = "select i.pname, h.type, i.price from Hardware h, Item i where i.serial_number=h.serial_number";
+			$sql = "select i.pname, h.type, i.price, i.quantity from Hardware h, Item i where i.serial_number=h.serial_number";
 			$result = executePlainSQL($sql);
 			echo "<br>Hardware and Accessories</br>";
 			echo "<table>";
-			echo "<tr><th>Game</th><th>Type</th><th>Price</th></tr>";
+			echo "<tr><th>Hardware</th><th>Type</th><th>Price</th><th>Quantity</th></tr>";
 			while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
-				echo "<tr><td>" . $row["PNAME"] . "</td><td>" . $row["TYPE"] . "</td><td>" . $row["PRICE"] . "</td></tr>"; //or just use "echo $row[0]"
+				echo "<tr><td>" . $row["PNAME"] . "</td><td>" . $row["TYPE"] . "</td><td>" . $row["PRICE"] . "</td><td>" . $row["QUANTITY"] . "</td></tr>"; //or just use "echo $row[0]"
 			}
 			echo "</table>";
 		}
