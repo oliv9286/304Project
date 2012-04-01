@@ -666,4 +666,31 @@ insert into modifies values
 insert into modifies values
 (44406109, 00000009, '08-FEB-2011');
 
+insert into hires values
+(44406106, 44406107);
+
+insert into hires values
+(44406106, 44406108);
+
+insert into hires values
+(44406106, 44406109);
+
+insert into hires values
+(44406109, 44406110);
+
+insert into hires values
+(44406106, 44406111);
+
+insert into hires values
+(44406106, 44406112);
+
+insert into hires values
+(44406108, 44406113);
+
+insert into hires values
+(44406107, 44406114);
+
+insert into hires values
+(44406110, 44406115);
+
 commit;
