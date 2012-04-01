@@ -116,10 +116,17 @@ Find the customers who have returned all consoles:
 <br>
 <table>
 <tr><td>
+<form method="post" action="Employee.php?allitems" id="allitems">
+<input type="submit" name="AllItemsSubmit" value="All Items"/>
+</form>
+</td><td>
+<form method="post" action="Employee.php?allgames" id="allgames">
+<input type="submit" name="AllGamesSubmit" value="All Games"/>
+</form>
+</td><td>
 <form method="post" action="Employee.php?name">
 
 <input type="submit" name="new_game" value="New Games">
-
 </form>
 </td><td>
 <form method="post" action="Employee.php?name">
@@ -133,6 +140,7 @@ Find the customers who have returned all consoles:
 </form>
 </td></tr>
 </table>
+
 
 
 
@@ -163,6 +171,44 @@ Find the customers who have returned all consoles:
 	}
 }
 	
+?>
+
+<?php
+	if($db_conn){
+		if(isset($_POST['AllGamesSubmit'])) {
+	    if(isset($_GET['allgames'])) {
+			$sql = "select i.pname, g.genre, g.platform, i.price, i.Quantity from Game g, Item i where g.serial_number=i.serial_number";
+			$result = executePlainSQL($sql);
+			echo "<br>All Games</br>";
+			echo "<table>";
+			echo "<tr><th>Game</th><th>Genre</th><th>Platform</th><th>Price</th><th>Quantity</th></tr>";
+			while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
+				echo "<tr><td>" . $row["PNAME"] . "</td><td>" . $row["GENRE"] . "</td><td>" . $row["PLATFORM"] . "</td><td>" . $row["PRICE"] . "</td><td>" . $row["QUANTITY"] . "</td></tr>"; //or just use "echo $row[0]" 
+			}
+			echo "</table>";	
+		}
+	  }	
+}
+?>
+
+<?php
+	if($db_conn){
+	   if(isset($_POST['AllItemsSubmit'])) {
+	    if(isset($_GET['allitems'])) {
+			$sql = "select * from item";
+			$result = executePlainSQL($sql);
+			echo "<br>All Items</br>";
+			echo "<table>";
+			echo "<tr><th>Serial#</th><th>Product Name</th><th>Price</th><th>Quantity</th></tr>";
+			while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
+				echo "<tr><td>" . $row["SERIAL_NUMBER"] . "</td><td>" . $row["PNAME"] . "</td><td>" . $row["PRICE"] . "</td><td>" . $row["QUANTITY"] . "</td></tr>"; //or just use "echo $row[0]" 
+			}
+			echo "</table>";		
+		
+		
+		}
+	  }
+}
 ?>
 <?php
 	if($db_conn){
