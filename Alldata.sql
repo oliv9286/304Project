@@ -1,5 +1,4 @@
 --Database Table Creation
-
 drop table Returns;
 drop table Stores_Purchased;
 drop table Makes;

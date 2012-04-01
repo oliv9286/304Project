@@ -87,6 +87,84 @@ Buy an item using this account
 	<input type="submit" name="buy" value="Buy!"/>
 </form>
     
+<form method="post" action="Customer.php?name" >
+Return an item using this account 
+	<input type="text" name="returner" value="Account ID"/>
+	<input type="text" name="ritem" value="Serial Number"/>
+	<input type="submit" name="return" value="Return!"/>
+</form>
+
+</br>
+<table>
+<tr><td>
+<form method="post" action="Customer.php?allitems" id="allitems">
+<input type="submit" name="AllItemsSubmit" value="All Items"/>
+</form>
+</td><td>
+<form method="post" action="Customer.php?allgames" id="allgames">
+<input type="submit" name="AllGamesSubmit" value="All Games"/>
+</form>
+</td><td>
+<form method="post" action="Customer.php?newgames" id="newgames">
+<input type="submit" name="NewGameSubmit" value="New Games"/>
+</form>
+</td><td>
+<form method="post" action="Customer.php?usedgames" id="usedgames">
+<input type="submit" name="UsedGameSubmit" value="Used Games"/>
+</form>
+</td><td>
+<form method="post" action="Customer.php?hardware" id="hardware">
+<input type="submit" name="HardwareSubmit" value="Hardware"/>
+</form>
+</td></tr>
+</table>
+
+
+
+<?php
+	
+	
+    if($db_conn) {
+      if(isset($_POST['return'])) {
+	    if(isset($_GET['name'])) {
+	      if(preg_match("/^[0-9]+$/", $_POST['returner'])){
+		      if (preg_match("/^[0-9]+$/", $_POST['ritem'])){
+			      
+		    $returner=$_POST['returner'];
+		    $ritem = $_POST['ritem'];
+		    $rdate = date("d-M-Y"); //today's date
+		    echo "<br>".$returner."<br>";
+		  
+		    $sqlreturn = "insert into returns values (".$returner.", ".$ritem.", '".$rdate."')";
+		    $parsedret = OCIParse($db_conn, $sqlreturn);
+		    $resultret=OCIExecute($parsedret, OCI_DEFAULT); 
+		    
+		    OCICommit($db_conn);
+		    
+		    $preturn = "select * from returns where account_id = ".$returner."";
+		    $resultreturn = executePlainSQL($preturn);
+		    
+			    //prints results from a select statement
+	  echo "<br>Got data from table Returns:<br>";
+	  echo "<table>";
+	  echo "<tr><th>Account ID</th><th>Serial Number</th><th>Return Date</th></tr>";
+
+	  while ($row = OCI_Fetch_Array($resultreturn, OCI_BOTH)) {
+		echo "<tr><td>" . $row["ACCOUNT_ID"] . "</td><td>" . $row["SERIAL_NUMBER"] . "</td><td>" . $row["RETURN_DATE"] . "</td><td>"; //or just use "echo $row[0]" 
+	  }
+	  echo "</table>";
+    
+		    
+		  } else
+		  echo "<br><font color='FF0000'>Input not of correct type!  Please input numbers only.</font><br>";
+	    } else
+	    echo "<br><font color='FF0000'>Input not of correct type!  Please input numbers only.</font><br>";
+	  }
+	}
+}
+
+   ?>
+   
 
  <?php
 	
@@ -378,7 +456,87 @@ Buy an item using this account
 
   ?>
   
+<?php
+	
+	 if($db_conn) {
+    if(isset($_POST['AllItemsSubmit'])) {
+if(isset($_GET['allitems'])) {
+$sql = "select * from item";
+$result = executePlainSQL($sql);
+echo "<br>All Items</br>";
+echo "<table>";
+echo "<tr><th>Serial#</th><th>Product Name</th><th>Price</th><th>Quantity</th></tr>";
+while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
+echo "<tr><td>" . $row["SERIAL_NUMBER"] . "</td><td>" . $row["PNAME"] . "</td><td>" . $row["PRICE"] . "</td><td>" . $row["QUANTITY"] . "</td></tr>"; //or just use "echo $row[0]"
+}
+echo "</table>";
 
+
+}
+}
+
+      else if(isset($_POST['AllGamesSubmit'])) {
+if(isset($_GET['allgames'])) {
+$sql = "select i.pname, g.genre, g.platform, i.price, i.Quantity from Game g, Item i where g.serial_number=i.serial_number";
+$result = executePlainSQL($sql);
+echo "<br>All Games</br>";
+echo "<table>";
+echo "<tr><th>Game</th><th>Genre</th><th>Platform</th><th>Price</th><th>Quantity</th></tr>";
+while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
+echo "<tr><td>" . $row["PNAME"] . "</td><td>" . $row["GENRE"] . "</td><td>" . $row["PLATFORM"] . "</td><td>" . $row["PRICE"] . "</td><td>" . $row["QUANTITY"] . "</td></tr>"; //or just use "echo $row[0]"
+}
+echo "</table>";
+}
+} 
+
+      else if(isset($_POST['NewGameSubmit'])) {
+if(isset($_GET['newgames'])) {
+$sql = "select i.pname, g.genre, g.platform, i.price from New_Game n, Game g, Item i where n.serial_number=g.serial_number AND n.serial_number = i.serial_number";
+$result = executePlainSQL($sql);
+echo "<br>New Games</br>";
+echo "<table>";
+echo "<tr><th>Game</th><th>Genre</th><th>Platform</th><th>Price</th></tr>";
+while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
+echo "<tr><td>" . $row["PNAME"] . "</td><td>" . $row["GENRE"] . "</td><td>" . $row["PLATFORM"] . "</td><td>" . $row["PRICE"] . "</td></tr>"; //or just use "echo $row[0]"
+}
+echo "</table>";
+}
+}
+
+      else if(isset($_POST['UsedGameSubmit'])) {
+if(isset($_GET['usedgames'])) {
+$sql = "select i.pname, g.genre, g.platform, i.price, u.discount from Used_Game u, Game g, Item i where u.serial_number=g.serial_number AND u.serial_number = i.serial_number";
+$result = executePlainSQL($sql);
+echo "<br>Used Games</br>";
+echo "<table>";
+echo "<tr><th>Game</th><th>Genre</th><th>Platform</th><th>Price</th><th>Discount</th></tr>";
+while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
+echo "<tr><td>" . $row["PNAME"] . "</td><td>" . $row["GENRE"] . "</td><td>" . $row["PLATFORM"] . "</td><td>" . $row["PRICE"] . "</td><td>" . $row["DISCOUNT"] . "</td></tr>"; //or just use "echo $row[0]"
+}
+echo "</table>";
+}
+}
+
+      else if(isset($_POST['HardwareSubmit'])) {
+if(isset($_GET['hardware'])) {
+$sql = "select i.pname, h.type, i.price from Hardware h, Item i where i.serial_number=h.serial_number";
+$result = executePlainSQL($sql);
+echo "<br>Hardware and Accessories</br>";
+echo "<table>";
+echo "<tr><th>Game</th><th>Type</th><th>Price</th></tr>";
+while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
+echo "<tr><td>" . $row["PNAME"] . "</td><td>" . $row["TYPE"] . "</td><td>" . $row["PRICE"] . "</td></tr>"; //or just use "echo $row[0]"
+}
+echo "</table>";
+}
+}
+
+}
+
+
+
+
+  ?>
   
 </br></br></br></br></br>
 
