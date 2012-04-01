@@ -187,7 +187,6 @@ Find the game genre with the
 			
 			}
 				
-				
 
 		}
 	  }	  
