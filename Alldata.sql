@@ -565,7 +565,7 @@ insert into Makes values
 (00000008, 00000008);
 
 insert into Makes values
-(00000009, 00000009);
+(00000008, 00000009);
 
 insert into Makes values
 (00000007, 00000010);
