@@ -11,7 +11,7 @@
 
 <?php
     $success = true;
-	$db_conn = OCILogon("ora_m4s7", "a44406106", "ug");
+	$db_conn = OCILogon("ora_u5o7", "a35307099", "ug");
 	
 	function executePlainSQL($cmdstr) { //takes a plain (no bound variables) SQL command and executes it
 	//echo "<br>running ".$cmdstr."<br>";
@@ -86,10 +86,10 @@
 	function printAllClerksResult($result) { //prints results from a select statement
 	  echo "<br>Got data from Clerk table<br>";
 	  echo "<table>";
-	  echo "<tr><th>Employee_ID</th></tr>";
+	  echo "<tr><th>Employee_ID</th><th>EName</th><th>EPhone</th><th>EAddress</th></tr>";
 
 	  while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
-		echo "<tr><td>" . $row["EMPLOYEE_ID"] . "</td><td>"; //or just use "echo $row[0]" 
+		echo "<tr><td>" . $row["EMPLOYEE_ID"] . "</td><td>" . $row["ENAME"] . "</td><td>" . $row["EPHONE"] . "</td><td>" . $row["EADDRESS"] . "</td><td>"; //or just use "echo $row[0]" 
 		}
 	  echo "</table>";
     }
@@ -112,6 +112,17 @@
 
 	  while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
 		echo "<tr><td>" . $row["SERIAL_NUMBER"] . "</td><td>" . $row["GENRE"] . "</td><td>" . $row["IS_USED"] . "</td><td>" . $row["PLATFORM"] . "</td><td>" . $row["PUBLISHER"] . "</td><td>"; //or just use "echo $row[0]" 
+		}
+	  echo "</table>";
+    }
+	
+	function printUsedGameResult($result) { //prints results from a select statement
+	  echo "<br>Got data from Used_Game table<br>";
+	  echo "<table>";
+	  echo "<tr><th>Serial_Number</th><th>Discount</th></tr>";
+
+	  while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
+		echo "<tr><td>" . $row["SERIAL_NUMBER"] . "</td><td>" . $row["DISCOUNT"] . "</td><td>"; //or just use "echo $row[0]" 
 		}
 	  echo "</table>";
     }
@@ -185,7 +196,7 @@ Add New Hardware: <br>
 </form>
 
 <form method="post" action="Manager.php?insertgame" id ="insert">
-Add New/Used Game: <br>
+Add New Game: <br>
 <input type="text" name="serial_number" value="Serial Number"/>
 <input type="text" name="PName" value="Name"/><br>
 <input type="text" name="Price" value="Price"/>
@@ -212,12 +223,39 @@ Add New/Used Game: <br>
 <option value="3DS">3DS</option>
 </select>
 
-<select name="newUsed">
-<option value="New">new</option>
-<option value="Used">Used</option>
+<input type="submit" name="insertGameSubmit" value="insert"/>
+</form>
+
+<form method="post" action="Manager.php?insertusedgame" id ="insert">
+Add Used Game: <br>
+<input type="text" name="serial_number" value="Serial Number"/>
+<input type="text" name="PName" value="Name"/><br>
+<input type="text" name="Price" value="Price"/>
+<input type="text" name="Discount" value="Discount"/>
+<input type="text" name="Quantity" value="Quantity"/><br>
+<input type="text" name="Company" value="Publisher/Company"/>
+
+<select name="genreType">
+<option value="RPG">RPG</option>
+<option value="PLATFORMER">PLATFORMER</option>
+<option value="HORROR">HORROR</option>
+<option value="ACTION">ACTION</option>
+<option value="FPS">FPS</option>
+<option value="RACING">RACING</option>
+<option value="SHOOTER">SHOOTER</option>
+<option value="FIGHTING">FIGHTING</option>
 </select>
 
-<input type="submit" name="insertGameSubmit" value="insert"/>
+<select name="platformType">
+<option value="PS3">PS3</option>
+<option value="PC">PC</option>
+<option value="XBox">XBox 360</option>
+<option value="Wii">Wii</option>
+<option value="Vita">Vita</option>
+<option value="3DS">3DS</option>
+</select>
+
+<input type="submit" name="insertUsedGameSubmit" value="insert"/>
 </form>
 
 
@@ -233,9 +271,15 @@ Change Stock: <br>
 <form method="post" action="Manager.php?modifyitem" id ="modify">
 Modify Item:<br>
 <input type="text" name="Serial" value="Serial Number" /><br>
-<input type="text" name="PName" value="New Name"/>
-<input type="text" name="Price" value="New Price"/>
+<input type="text" name="PName" value="New_Name"/>
+<input type="text" name="Price" value="New_Price"/>
 <input type="submit" name="modifySubmit" value="Submit"/>
+</form>
+
+<form method="post" action="Manager.php?deleteitem" id ="modify">
+Delete Item:<br>
+<input type="text" name="delsnum" value="Serial Number" /><br>
+<input type="submit" name="deleteSubmit" value="Submit"/>
 </form>
 
 <form method="post" action="Manager.php?allpayment" id ="allp">
@@ -274,7 +318,7 @@ All Clerks<br>
 		    
 		  }
 		 else {
-			echo "<p>Input Incorrect! Employee Name Must Be Numbers<p>";
+			echo "<p><br><font color='FF0000'>Input Incorrect! Employee Name Must Be Numbers</font><br><p>";
 			}
 	    }
 	  }
@@ -290,7 +334,7 @@ All Clerks<br>
 		    
 		  }
 		   else {
-			echo "<br>Input Incorrect! AccountID Must Be Numbers <br>";
+			echo "<p><br><font color='FF0000'>Input Incorrect! AccountID Must Be Numbers </font><br><p>";
 			}
 	    }
 	  }
@@ -338,25 +382,25 @@ All Clerks<br>
 							}
 							
 							else {
-							echo "<br>Input Incorrect! Company Name Must Be Letters<br>";
+							echo "<p><br><font color='FF0000'>Input Incorrect! Company Name Must Be Letters</font><br><p>";
 							}
 						}
 						
 						else {
-						echo "<br>Input Incorrect! Quantity Must Be Numbers<br>";
+						echo "<p><br><font color='FF0000'>Input Incorrect! Quantity Must Be Numbers</font><br><p>";
 						}
 					}
 					
 					else {
-					echo "<br>Input Incorrect! Price Must Be Numbers	<br>";
+					echo "<p><br><font color='FF0000'>Input Incorrect! Price Must Be Numbers	</font><br><p>";
 					}
 				}
 				else {
-				echo "<br>Input Incorrect! Name Must Be Letters Or Numbers<br>";
+				echo "<p><br><font color='FF0000'>Input Incorrect! Name Must Be Letters Or Numbers</font><br><p>";
 				}
 			 }
 			else {
-			echo "<br>Input Incorrect!	Serial Number Must Be Numbers<br>";
+			echo "<p><br><font color='FF0000'>Input Incorrect!	Serial Number Must Be Numbers</font><br><p>";
 			}
 				
 		
@@ -366,7 +410,7 @@ All Clerks<br>
 		  //}
 	    }
 	    else {
-			echo "<br>Insert Item Failed<br>";
+			echo "<p><br><font color='FF0000'>Insert Item Failed</font><br><p>";
 		}
 	  }
 	  
@@ -392,7 +436,7 @@ All Clerks<br>
 								$comp=$_POST['Company'];
 								$gType=$_POST['genreType'];
 								$pType=$_POST['platformType'];
-								$newU=$_POST['newUsed'];
+								//$newU=$_POST['newUsed'];
 
 
 								echo "<br>".$serial_number."<br>";
@@ -402,40 +446,26 @@ All Clerks<br>
 								echo "<br>".$Company."<br>";
 								echo "<br>".$genreType."<br>";
 								echo "<br>".$platformType."<br>";
-								echo "<br>".$newUsed."<br>";
+								//echo "<br>".$newUsed."<br>";
 			
 								$sql = "INSERT INTO Item VALUES (".$sNum.", '".$pName."', ".$pr.", ".$quan.")";
 								$parsed = OCIParse($db_conn, $sql);
 								$r=OCIExecute($parsed, OCI_DEFAULT); 
-			
-								if($newU == "New")
-								{
-									$temp = 0;
-								}
-								else
-								{
-									$temp = 1;
-								}
 			
 								//echo "<br>".$temp."<br>";
 								$sql2 =	"INSERT INTO Game values(".$sNum.", '".$gType."', '".$temp."', '".$pType."', '".$comp."')";
 								$parsed2 = OCIParse($db_conn, $sql2);
 								$r2=OCIExecute($parsed2, OCI_DEFAULT);	
 			
-			
-								if($temp == 0)
-								{			
+					
 									$sql3 = "INSERT INTO new_game VALUES (".$sNum.")";
 									$parsed3 = OCIParse($db_conn, $sql3);
 									$r3=OCIExecute($parsed3, OCI_DEFAULT);
-								}
-								else
-								{
-									$sql3 = "INSERT INTO used_game VALUES (".$sNum.", ".$pr.")";
-									$parsed3 = OCIParse($db_conn, $sql3);
-									$r3=OCIExecute($parsed3, OCI_DEFAULT);
-			
-								}
+
+									//$sql3 = "INSERT INTO used_game VALUES (".$sNum.", ".$pr.")";
+									//$parsed3 = OCIParse($db_conn, $sql3);
+									//$r3=OCIExecute($parsed3, OCI_DEFAULT);
+
 			
 								OCICommit($db_conn); 
 			
@@ -448,23 +478,23 @@ All Clerks<br>
 							
 							}
 							 else {
-							echo "<br>Incorrect Input! Company Name Must Be Letters<br>";
+							echo "<p><br><font color='FF0000'>Incorrect Input! Company Name Must Be Letters</font><br><p>";
 							}
 						}
 						 else {
-						echo "<br>Incorrect Input! Quantity Must Be Numbers<br>";
+						echo "<p><br><font color='FF0000'>Incorrect Input! Quantity Must Be Numbers</font><br><p>";
 						}
 					}
 					 else {
-					echo "<br>Incorrect Input! Price Must Be Numbers<br>";
+					echo "<p><br><font color='FF0000'>Incorrect Input! Price Must Be Numbers</font><br><p>";
 					}
 				}
 				 else {
-				echo "<br>Incorrect Input! Name Must Be Letters Or Numbers<br>";
+				echo "<p><br><font color='FF0000'>Incorrect Input! Name Must Be Letters Or Numbers</font><br><p>";
 				}
 			}
 			else {
-			echo "<br>Incorrect Input! Serial Number Must Be Numbers<br>";
+			echo "<p><br><font color='FF0000'>Incorrect Input! Serial Number Must Be Numbers</font><br><p>";
 			}			
 		
 		
@@ -480,9 +510,122 @@ All Clerks<br>
 		  //}
 	    }
 	    else {
-			echo "<br>Insertitem failed<br>";
+			echo "<p><br><font color='FF0000'>Insertitem failed</font><br><p>";
 		}
 	  }
+	  
+	  else if(isset($_POST['insertUsedGameSubmit'])) {
+	    if(isset($_GET['insertusedgame'])) {
+	    //  if(preg_match("/[A-Z  | a-z]+/", $_POST['clerk'])){
+		
+		if(preg_match("/[0-9]+/", $_POST['serial_number']))
+			 {
+				if(preg_match("/[A-Z  | a-z | 0-9]+/", $_POST['PName']))
+				{
+					if(preg_match("/[0-9]+/", $_POST['Price']))
+					{
+						if(preg_match("/[0-9]+/", $_POST['Discount']))
+						{
+						if(preg_match("/[0-9]+/", $_POST['Quantity']))
+						{
+							if(preg_match("/[A-Z  | a-z]+/", $_POST['Company']))
+							{	
+							
+								$sNum=$_POST['serial_number'];
+								$pName=$_POST['PName'];
+								$pr=$_POST['Price'];
+								$dis=$_POST['Discount'];
+								$quan=$_POST['Quantity'];
+								$comp=$_POST['Company'];
+								$gType=$_POST['genreType'];
+								$pType=$_POST['platformType'];
+								//$newU=$_POST['newUsed'];
+
+
+								echo "<br>".$serial_number."<br>";
+								echo "<br>".$PName."<br>";
+								echo "<br>".$Price."<br>";
+								echo "<br>".$Discount."<br>";
+								echo "<br>".$Quantity."<br>";
+								echo "<br>".$Company."<br>";
+								echo "<br>".$genreType."<br>";
+								echo "<br>".$platformType."<br>";
+								//echo "<br>".$newUsed."<br>";
+			
+								$sql = "INSERT INTO Item VALUES (".$sNum.", '".$pName."', ".$pr.", ".$quan.")";
+								$parsed = OCIParse($db_conn, $sql);
+								$r=OCIExecute($parsed, OCI_DEFAULT); 
+			
+								//echo "<br>".$temp."<br>";
+								$sql2 =	"INSERT INTO Game values(".$sNum.", '".$gType."', '".$temp."', '".$pType."', '".$comp."')";
+								$parsed2 = OCIParse($db_conn, $sql2);
+								$r2=OCIExecute($parsed2, OCI_DEFAULT);	
+			
+					
+									//$sql3 = "INSERT INTO new_game VALUES (".$sNum.")";
+									//$parsed3 = OCIParse($db_conn, $sql3);
+									//$r3=OCIExecute($parsed3, OCI_DEFAULT);
+
+									$sql3 = "INSERT INTO used_game VALUES (".$sNum.", ".$dis.")";
+									$parsed3 = OCIParse($db_conn, $sql3);
+									$r3=OCIExecute($parsed3, OCI_DEFAULT);
+
+			
+								OCICommit($db_conn); 
+			
+								$sql4 = "select * from Used_Game g";
+								$result4 = executePlainSQL($sql4);
+			
+								printInsertResult($r3);
+								printUsedGameResult($result4);
+							
+							
+							}
+							 else {
+							echo "<p><br><font color='FF0000'>Incorrect Input! Company Name Must Be Letters</font><br><p>";
+							}
+						}
+						 else {
+						echo "<p><br><font color='FF0000'>Incorrect Input! Quantity Must Be Numbers</font><br><p>";
+						}
+						}
+						else {
+							echo "<p><br><font color='FF0000'>Incorrect Input! Discount Must Be Numbers</font><br><p>";
+							}
+					}
+					 else {
+					echo "<p><br><font color='FF0000'>Incorrect Input! Price Must Be Numbers</font><br><p>";
+					}
+				}
+				 else {
+				echo "<p><br><font color='FF0000'>Incorrect Input! Name Must Be Letters Or Numbers</font><br><p>";
+				}
+			}
+			else {
+			echo "<p><br><font color='FF0000'>Incorrect Input! Serial Number Must Be Numbers</font><br><p>";
+			}			
+		
+		
+		
+		
+
+			//echo "<br>".$r2."<br>";
+			
+			
+			
+		
+		    
+		  //}
+	    }
+	    else {
+			echo "<p><br><font color='FF0000'>Insertitem failed</font><br><p>";
+		}
+	  }
+	  
+	
+	  
+	  
+	  
 	  
 	  else if(isset($_POST['stockSubmit'])) {
 	    if(isset($_GET['changestock'])) {
@@ -507,55 +650,80 @@ All Clerks<br>
 		    
 		    }
 			else {
-				echo "<br>Incorrect Input! Quantity Must Be Numbers<br>";
+				echo "<p><br><font color='FF0000'>Incorrect Input! Quantity Must Be Numbers</font><br><p>";
 			}
 		 }
 		 else {
-			echo "<br>Incorrect Input! Serial Number Must Be Numbers<br>";
+			echo "<p><br><font color='FF0000'>Incorrect Input! Serial Number Must Be Numbers</font><br><p>";
 		}
 		 
 	    }
 	  }
 	  
-	  else if(isset($_POST['modifySubmit'])) {
+	  	  else if(isset($_POST['modifySubmit'])) {
 	    if(isset($_GET['modifyitem'])) {
 	      if(preg_match("/[0-9]+/", $_POST['Serial']))
 		  {
-			if(preg_match("/[A-Z  | a-z |0-9]+/", $_POST['PName']))
-			{
-				if(preg_match("/[0-9]+/", $_POST['Price']))
-				{
-					$sNum=$_POST['Serial'];
-					$pname=$_POST['PName'];
-					$price=$_POST['Price'];
-					//echo "<br>".$sNum."<br>";
-					//echo "<br>".$quan."<br>";
 		  
+			$sNum=$_POST['Serial'];
+			$pname=$_POST['PName'];
+			$price=$_POST['Price'];
+			//echo "<br>".$sNum."<br>";
+			//echo "<br>".$quan."<br>";
+			
+			if (!(strcmp($pname, "New_Name") == 0)) {
+				if(preg_match("/[A-Z  | a-z |0-9]+/", $_POST['PName']))
+				{
 					$sql = "update Item set PName ='".$pname."' where Serial_Number ='".$sNum."'";
 					$parsed = OCIParse($db_conn, $sql);
 					$r=OCIExecute($parsed, OCI_DEFAULT); 
-			
+				}
+				else {
+					echo "<p><br><font color='FF0000'>Incorrect Input! Name Must Be Letters Or Numbers</font><br><p>";
+				}
+			}
+				
+			if (!(strcmp($price, "New_Price") == 0)) {	
+				if(preg_match("/[0-9]+/", $_POST['Price']))
+				{
 					$sql2 = "update Item set Price ='".$price."' where Serial_Number ='".$sNum."'";
 					$parsed2 = OCIParse($db_conn, $sql2);
 					$r2=OCIExecute($parsed2, OCI_DEFAULT); 
+				}
+				
+				else {
+					echo "<p><br><font color='FF0000'>Incorrect Input! Price Must Be Numbers</font><br><p>";
+				}
+		    }
 					OCICommit($db_conn); 
-			
-					printModifyResult($r2);
+					//printModifyResult($r2);
 					$sql4 = "select * from Item i";
 					$result4 = executePlainSQL($sql4);
 					printItemResult($result4);
-				}
-				else {
-					echo "<br>Incorrect Input! Price Must Be Numbers<br>";
-				}
-		    }
-			else {
-				echo "<br>Incorrect Input! Name Must Be Letters Or Numbers<br>";
-			}
 
 		 }
 		 else {
-			echo "<br>Incorrect Input! Serial Number Must Be Numbers<br>";
+			echo "<p><br><font color='FF0000'>Incorrect Input! Serial Number Must Be Numbers</font><br><p>";
+		}
+	    }
+	  }
+	  
+	  else if(isset($_POST['deleteSubmit'])) {
+	    if(isset($_GET['deleteitem'])) {
+	      if(preg_match("/[0-9]+/", $_POST['delsnum'])){
+			$del=$_POST['delsnum'];
+			$sqld = "delete Item where Serial_Number = ".$del." ";
+		    $parsedd = OCIParse($db_conn, $sqld);
+		    $resultd=OCIExecute($parsedd, OCI_DEFAULT);
+		    OCICommit($db_conn);
+		    
+		    $sqlpd = "select * from Item i";	    
+		    $result = executePlainSQL($sqlpd);
+			printItemResult($result);
+		    
+		  }
+		  else {
+			echo "<p><br><font color='FF0000'>Incorrect Input! Serial Number Must Be Numbers</font><br><p>";
 		}
 	    }
 	  }
@@ -600,7 +768,7 @@ All Clerks<br>
 	    if(isset($_GET['allclerks'])) {
 	    //  if(preg_match("/[A-Z  | a-z]+/", $_POST['clerk'])){
 		  
-		    $sql = "select * from Clerk";
+		    $sql = "select e.Employee_ID, e.EName, e.EPhone, e.EAddress from Employee e, Clerk c where c.Employee_ID = e.Employee_ID";
 		    $result = executePlainSQL($sql);
 			printAllClerksResult($result);
 		    
