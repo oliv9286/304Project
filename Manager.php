@@ -14,7 +14,7 @@
 
 <?php
     $success = true;
-	$db_conn = OCILogon("ora_y4u7", "a44229102", "ug");
+	$db_conn = OCILogon("ora_u5o7", "a35307099", "ug");
 	
 	function executePlainSQL($cmdstr) { //takes a plain (no bound variables) SQL command and executes it
 	//echo "<br>running ".$cmdstr."<br>";
@@ -323,9 +323,7 @@ All Clerks --
 <input type="submit" name="allClerksSubmit" value="Find!"/>
 </form>
 </td>
-</tr>
-</table>
-
+<td>
 <form method="post" action="Manager.php?allhires" id ="allp">
 All Hires --
 <input type="submit" name="allHiresSubmit" value="Find!"/>
@@ -336,6 +334,10 @@ All Hires --
 
 <table>
 <tr><td>
+<form method="post" action="Manager.php?viewallitems" id="allitems">
+<input type="submit" name="AllItemsSubmit" value="All Items"/>
+</form>
+</td><td>
 <form method="post" action="Manager.php?viewallgames" id="allgames">
 <input type="submit" name="AllGamesSubmit" value="All Games"/>
 </form>
@@ -836,6 +838,22 @@ All Hires --
 		    
 		  //}
 	    }
+	  }
+
+      else if(isset($_POST['AllItemsSubmit'])) {
+	    if(isset($_GET['viewallitems'])) {
+			$sql = "select * from item";
+			$result = executePlainSQL($sql);
+			echo "<br>All Items</br>";
+			echo "<table>";
+			echo "<tr><th>Serial#</th><th>Product Name</th><th>Price</th><th>Quantity</th></tr>";
+			while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
+				echo "<tr><td>" . $row["SERIAL_NUMBER"] . "</td><td>" . $row["PNAME"] . "</td><td>" . $row["PRICE"] . "</td><td>" . $row["QUANTITY"] . "</td></tr>"; //or just use "echo $row[0]" 
+			}
+			echo "</table>";		
+		
+		
+		}
 	  }	  
 	  
 	        else if(isset($_POST['AllGamesSubmit'])) {
