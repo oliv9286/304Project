@@ -211,6 +211,7 @@ Return an item using this account
     		 
     		$today =  date("d-M-Y"); //today's date
 			
+    		if ( strcmp ( $paymethod , "Points" ) != 0){
     		$prinsert = "insert into Payment_Record values (".$sales.", '".$paymethod."', ".$total.", '".$today."')";
 		    $parsedpr = OCIParse($db_conn, $prinsert);
 		    $resultpr=OCIExecute($parsedpr, OCI_DEFAULT);
@@ -222,6 +223,7 @@ Return an item using this account
 		    $spinsert = "insert into stores_purchased values (".$sales.", ".$item.")";
 		    $parsedsp = OCIParse($db_conn, $spinsert);
 		    $resultsp=OCIExecute($parsedsp, OCI_DEFAULT);
+	    }
 		    
 		        		
     		if ( strcmp ( $paymethod , "Points" ) == 0){
@@ -234,6 +236,19 @@ Return an item using this account
     		if ($pointsdec < 0)
     		echo "<br><font color='FF0000'>Not enough points!  Choose another payment method.</font><br>";
     		else {
+	    		
+	    	$prinsert = "insert into Payment_Record values (".$sales.", '".$paymethod."', ".$total.", '".$today."')";
+		    $parsedpr = OCIParse($db_conn, $prinsert);
+		    $resultpr=OCIExecute($parsedpr, OCI_DEFAULT);
+		    
+		    $minsert = "insert into makes values (".$buyer.", ".$sales.")";
+		    $parsedm = OCIParse($db_conn, $minsert);
+		    $resultm=OCIExecute($parsedm, OCI_DEFAULT);
+		    
+		    $spinsert = "insert into stores_purchased values (".$sales.", ".$item.")";
+		    $parsedsp = OCIParse($db_conn, $spinsert);
+		    $resultsp=OCIExecute($parsedsp, OCI_DEFAULT);
+		    
     		$pdec = "update account set points =".$pointsdec." where account_id = ".$buyer."";
 		    $parsedpdec = OCIParse($db_conn, $pdec);
 		    $resultpdec=OCIExecute($parsedpdec, OCI_DEFAULT); 
