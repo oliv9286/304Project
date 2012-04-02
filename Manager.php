@@ -707,7 +707,7 @@ All Hires --
 	    if(isset($_GET['changestock'])) {
 	      if(preg_match("/^[0-9]+$/", $_POST['Serial']))
 		  {
-			if(preg_match("/^[0-9]+$/", $_POST['Quantity']))
+			if(preg_match("/^-?[0-9]+$/", $_POST['Quantity']))
 			{
 				$sNum=$_POST['Serial'];
 				$quan=$_POST['Quantity'];
