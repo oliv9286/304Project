@@ -598,7 +598,7 @@ Find the customers who have returned all consoles:
 									where Account_ID = ".$account_ap."";
 					$show_result = executePlainSQL($show_points);
 					
-				echo "<br>Created New Account:<br>";
+				echo "<br>Added Points:<br>";
 	  			echo "<table>";
 	  			echo "<tr><th>AccountID</th><th>Points</th><th>Name</th><th>Address</th><th>Phone</th></tr>";
 
