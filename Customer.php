@@ -561,7 +561,7 @@ $sql = "select i.pname, h.type, i.price from Hardware h, Item i where i.serial_n
 $result = executePlainSQL($sql);
 echo "<br>Hardware and Accessories</br>";
 echo "<table>";
-echo "<tr><th>Game</th><th>Type</th><th>Price</th></tr>";
+echo "<tr><th>Hardware</th><th>Type</th><th>Price</th></tr>";
 while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
 echo "<tr><td>" . $row["PNAME"] . "</td><td>" . $row["TYPE"] . "</td><td>" . $row["PRICE"] . "</td></tr>"; //or just use "echo $row[0]"
 }
