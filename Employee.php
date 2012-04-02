@@ -570,7 +570,7 @@ Find the customers who have returned all consoles:
 			if(!(strcmp($account_ap, "AccountID"))==0){
 			if(preg_match("/[0-9]+/", $_POST['AccountAddPoints'])){
 			if(!(strcmp($points, "Points"))==0){
-				if(preg_match("/[0-9]+/", $_POST['addpoints'])){
+				if(preg_match("/-?[0-9]+/", $_POST['addpoints'])){
 					
 					$curr_point = "select A.Points
 									from Account A
